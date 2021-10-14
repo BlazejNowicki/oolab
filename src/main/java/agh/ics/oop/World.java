@@ -1,23 +1,31 @@
 package agh.ics.oop;
 
+import static java.lang.System.out;
+
 public class World {
 
     private static void run(String[] directions){
-        for (int i=0; i < directions.length; i++) {
-            System.out.print(directions[i]);
-            if (i+1 < directions.length) {
-                System.out.print(",");
-            }
-            else {
-                System.out.print("\n");
+        out.println("Start");
+        for (String s: directions) {
+            switch (s){
+                case "f":
+                    out.println("Zwierzak idzie do przodu");
+                    break;
+                case "b":
+                    out.println("Zwierzak idzie do tyłu");
+                    break;
+                case "r":
+                    out.println("Zwierzak skręca w prawo");
+                    break;
+                case "l":
+                    out.println("Zwierzak skręca w lewo");
+                    break;
             }
         }
-//        System.out.println("zwierzak idzie do przodu");
+        out.println("Stop");
     }
     public static void main(String[] args) {
-        System.out.println("system wystartował");
-        String[] dirs  = {"A","B","C"};
+        String[] dirs  = {"f", "f", "r", "l"};
         run(dirs);
-        System.out.println("system zakończył działanie");
     }
 }
