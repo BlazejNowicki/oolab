@@ -45,8 +45,9 @@ public class World {
         return dirs_enum;
     }
 
-    public static void main(String[] args) {
-        String[] dirs  = {"f", "f", "r", "l"};
+    public static void main(String[] dirs) {
+//        out.println(args);
+//        String[] dirs  = {"f", "f", "r", "l"};
         Direction[] dirs_translated = translate(dirs);
         run(dirs_translated);
     }
