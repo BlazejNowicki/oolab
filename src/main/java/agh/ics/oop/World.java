@@ -6,19 +6,11 @@ public class World {
     private static void run(Direction[] directions){
         out.println("Start");
         for (Direction s: directions) {
-            switch (s){
-                case FORWARD:
-                    out.println("Zwierzak idzie do przodu");
-                    break;
-                case BACKWARD:
-                    out.println("Zwierzak idzie do tyłu");
-                    break;
-                case RIGHT:
-                    out.println("Zwierzak skręca w prawo");
-                    break;
-                case LEFT:
-                    out.println("Zwierzak skręca w lewo");
-                    break;
+            switch (s) {
+                case FORWARD -> out.println("Zwierzak idzie do przodu");
+                case BACKWARD -> out.println("Zwierzak idzie do tyłu");
+                case RIGHT -> out.println("Zwierzak skręca w prawo");
+                case LEFT -> out.println("Zwierzak skręca w lewo");
             }
         }
         out.println("Stop");
@@ -28,27 +20,33 @@ public class World {
         Direction[] dirs_enum = new Direction[dirs.length];
         for (int i=0; i< dirs.length; i++) {
             switch (dirs[i]) {
-                case "f":
-                    dirs_enum[i] = Direction.FORWARD;
-                    break;
-                case "b":
-                    dirs_enum[i] = Direction.BACKWARD;
-                    break;
-                case "r":
-                    dirs_enum[i] = Direction.RIGHT;
-                    break;
-                case "l":
-                    dirs_enum[i] = Direction.LEFT;
-                    break;
+                case "f" -> dirs_enum[i] = Direction.FORWARD;
+                case "b" -> dirs_enum[i] = Direction.BACKWARD;
+                case "r" -> dirs_enum[i] = Direction.RIGHT;
+                case "l" -> dirs_enum[i] = Direction.LEFT;
             }
         }
         return dirs_enum;
     }
 
     public static void main(String[] dirs) {
-//        out.println(args);
 //        String[] dirs  = {"f", "f", "r", "l"};
-        Direction[] dirs_translated = translate(dirs);
-        run(dirs_translated);
+//        Direction[] dirs_translated = translate(dirs);
+//        run(dirs_translated);
+//        Vector2d v = new Vector2d(1,2);
+//        out.println(v.toString());
+        Vector2d position1 = new Vector2d(1,1);
+        System.out.println(position1);
+        Vector2d position2 = new Vector2d(-2,2);
+        System.out.println(position2);
+        System.out.println(position1.add(position2));
+        out.println(MapDirection.NORTH);
+        out.println(MapDirection.SOUTH);
+        out.println(MapDirection.EAST);
+        out.println(MapDirection.WEST);
+        out.println(position1.lowerLeft(position2));
+        out.println(position1.upperRight(position2));
+        out.println(MapDirection.NORTH.toUnitVector());
+        out.println(new Vector2d(1543231, -3542345));
     }
 }
