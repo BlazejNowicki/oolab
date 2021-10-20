@@ -37,8 +37,8 @@ public class Vector2dTest {
         Vector2d A = new Vector2d(1,233);
         Vector2d B = new Vector2d(4,-233);
         Vector2d C = new Vector2d(1,-555);
-        Vector2d D = new Vector2d(3245,56345);
-        Vector2d E = new Vector2d(-400123,-5);
+        Vector2d D = new Vector2d(3245,563454358);
+        Vector2d E = new Vector2d(-400123342,-5);
         assertTrue(A.precedes(D));
         assertTrue(A.precedes(A));
         assertTrue(D.precedes(D));
@@ -54,8 +54,8 @@ public class Vector2dTest {
         Vector2d A = new Vector2d(1,233);
         Vector2d B = new Vector2d(4,-233);
         Vector2d C = new Vector2d(1,-555);
-        Vector2d D = new Vector2d(3245,56345);
-        Vector2d E = new Vector2d(-400123,-5);
+        Vector2d D = new Vector2d(3245,56345234);
+        Vector2d E = new Vector2d(-400123324,-5);
         assertFalse(A.follows(D));
         assertTrue(D.follows(A));
         assertTrue(A.follows(A));
@@ -72,21 +72,21 @@ public class Vector2dTest {
         Vector2d A = new Vector2d(1,233);
         Vector2d B = new Vector2d(4,-233);
         Vector2d C = new Vector2d(1,-555);
-        Vector2d D = new Vector2d(3245,56345);
+        Vector2d D = new Vector2d(3245456,56345768);
         assertEquals(new Vector2d(4, 233), A.upperRight(B));
         assertEquals(new Vector2d(4, -233), B.upperRight(C));
-        assertEquals(new Vector2d(3245, 56345), D.upperRight(A));
+        assertEquals(new Vector2d(3245456, 56345768), D.upperRight(A));
         assertEquals(new Vector2d(1, 233), A.upperRight(A));
     }
 
     @Test
     void lowerLeft() {
         Vector2d A = new Vector2d(1,233);
-        Vector2d B = new Vector2d(4,-233);
+        Vector2d B = new Vector2d(4,-23378923);
         Vector2d C = new Vector2d(1,-555);
         Vector2d D = new Vector2d(3245,56345);
-        assertEquals(new Vector2d(1, -233), A.lowerLeft(B));
-        assertEquals(new Vector2d(1, -555), B.lowerLeft(C));
+        assertEquals(new Vector2d(1, -23378923), A.lowerLeft(B));
+        assertEquals(new Vector2d(1, -23378923), B.lowerLeft(C));
         assertEquals(new Vector2d(1, 233), D.lowerLeft(A));
         assertEquals(new Vector2d(1, 233), A.lowerLeft(A));
     }
@@ -95,13 +95,13 @@ public class Vector2dTest {
     void addTest() {
         Vector2d A = new Vector2d(2, 6);
         Vector2d B = new Vector2d(4567, 687);
-        Vector2d C = new Vector2d(-69854, 90800);
-        Vector2d D = new Vector2d(-58, 68);
+        Vector2d C = new Vector2d(-698540000, 908000000);
+        Vector2d D = new Vector2d(-580000, 680000);
         Vector2d E = new Vector2d(0, 0);
         assertEquals(new Vector2d(4569, 693), A.add(B));
         assertEquals(new Vector2d(4569, 693), B.add(A));
-        assertEquals(new Vector2d(-58, 68), D.add(E));
-        assertEquals(new Vector2d(-69912, 90868), C.add(D));
+        assertEquals(new Vector2d(-580000, 680000), D.add(E));
+        assertEquals(new Vector2d(-699120000, 908680000), C.add(D));
         assertNotEquals(new Vector2d(234, 34), A.add(B));
         assertNotEquals(new Vector2d(4569, 4), A.add(B));
     }
@@ -110,13 +110,13 @@ public class Vector2dTest {
     void subtractTest() {
         Vector2d A = new Vector2d(2, 6);
         Vector2d B = new Vector2d(4567, 687);
-        Vector2d C = new Vector2d(-69854, 90800);
-        Vector2d D = new Vector2d(-58, 68);
+        Vector2d C = new Vector2d(-698540000, 908000000);
+        Vector2d D = new Vector2d(-580000, 680000);
         Vector2d E = new Vector2d(0, 0);
         assertEquals(new Vector2d(-4565, -681), A.substract(B));
         assertEquals(new Vector2d(4565, 681), B.substract(A));
-        assertEquals(new Vector2d(-58, 68), D.substract(E));
-        assertEquals(new Vector2d(-69796, 90732), C.substract(D));
+        assertEquals(new Vector2d(-580000, 680000), D.substract(E));
+        assertEquals(new Vector2d(-697960000, 907320000), C.substract(D));
         assertNotEquals(new Vector2d(234, 34), A.substract(B));
         assertNotEquals(new Vector2d(4569, 4), A.substract(B));
     }
@@ -126,7 +126,7 @@ public class Vector2dTest {
         assertEquals(new Vector2d(-4565, -681), new Vector2d(4565, 681).opposite());
         assertEquals(new Vector2d(4565, 681), new Vector2d(-4565, -681).opposite());
         assertEquals(new Vector2d(-58, 68), new Vector2d(58, -68).opposite());
-        assertEquals(new Vector2d(-69796, 90732), new Vector2d(69796, -90732).opposite());
+        assertEquals(new Vector2d(-69796465, 90732456), new Vector2d(69796465, -90732456).opposite());
         assertEquals(new Vector2d(234, 34), new Vector2d(-234, -34).opposite());
         assertEquals(new Vector2d(4569, 4), new Vector2d(-4569, -4).opposite());
         assertEquals(new Vector2d(0, 4), new Vector2d(0, -4).opposite());
