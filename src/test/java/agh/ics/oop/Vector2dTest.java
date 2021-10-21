@@ -113,12 +113,12 @@ public class Vector2dTest {
         Vector2d C = new Vector2d(-698540000, 908000000);
         Vector2d D = new Vector2d(-580000, 680000);
         Vector2d E = new Vector2d(0, 0);
-        assertEquals(new Vector2d(-4565, -681), A.substract(B));
-        assertEquals(new Vector2d(4565, 681), B.substract(A));
-        assertEquals(new Vector2d(-580000, 680000), D.substract(E));
-        assertEquals(new Vector2d(-697960000, 907320000), C.substract(D));
-        assertNotEquals(new Vector2d(234, 34), A.substract(B));
-        assertNotEquals(new Vector2d(4569, 4), A.substract(B));
+        assertEquals(new Vector2d(-4565, -681), A.subtract(B));
+        assertEquals(new Vector2d(4565, 681), B.subtract(A));
+        assertEquals(new Vector2d(-580000, 680000), D.subtract(E));
+        assertEquals(new Vector2d(-697960000, 907320000), C.subtract(D));
+        assertNotEquals(new Vector2d(234, 34), A.subtract(B));
+        assertNotEquals(new Vector2d(4569, 4), A.subtract(B));
     }
 
     @Test

@@ -35,18 +35,26 @@ public class World {
 //        run(dirs_translated);
 //        Vector2d v = new Vector2d(1,2);
 //        out.println(v.toString());
-        Vector2d position1 = new Vector2d(1,1);
-        System.out.println(position1);
-        Vector2d position2 = new Vector2d(-2,2);
-        System.out.println(position2);
-        System.out.println(position1.add(position2));
-        out.println(MapDirection.NORTH);
-        out.println(MapDirection.SOUTH);
-        out.println(MapDirection.EAST);
-        out.println(MapDirection.WEST);
-        out.println(position1.lowerLeft(position2));
-        out.println(position1.upperRight(position2));
-        out.println(MapDirection.NORTH.toUnitVector());
-        out.println(new Vector2d(1543231, -3542345));
+//        Vector2d position1 = new Vector2d(1,1);
+//        System.out.println(position1);
+//        Vector2d position2 = new Vector2d(-2,2);
+//        System.out.println(position2);
+//        System.out.println(position1.add(position2));
+//        out.println(MapDirection.NORTH);
+//        out.println(MapDirection.SOUTH);
+//        out.println(MapDirection.EAST);
+//        out.println(MapDirection.WEST);
+//        out.println(position1.lowerLeft(position2));
+//        out.println(position1.upperRight(position2));
+//        out.println(MapDirection.NORTH.toUnitVector());
+//        out.println(new Vector2d(1543231, -3542345));
+        String[] str_dirs = {"r", "f", "f", "f"};
+        Animal Bob = new Animal();
+        out.println(Bob);
+        MoveDirection[] translated = OptionsParser.parse(str_dirs);
+        for(MoveDirection dir: translated) {
+            Bob.move(dir);
+        }
+        out.println(Bob);
     }
 }
