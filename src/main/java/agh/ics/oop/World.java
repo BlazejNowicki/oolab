@@ -48,13 +48,20 @@ public class World {
 //        out.println(position1.upperRight(position2));
 //        out.println(MapDirection.NORTH.toUnitVector());
 //        out.println(new Vector2d(1543231, -3542345));
-        String[] str_dirs = {"r", "f", "f", "f"};
-        Animal Bob = new Animal();
-        out.println(Bob);
-        MoveDirection[] translated = OptionsParser.parse(str_dirs);
-        for(MoveDirection dir: translated) {
-            Bob.move(dir);
+//        String[] str_dirs = {"r", "f", "f", "f"};
+//        Animal Bob = new Animal();
+//        out.println(Bob);
+//        MoveDirection[] translated = OptionsParser.parse(str_dirs);
+//        for(MoveDirection dir: translated) {
+//            Bob.move(dir);
+//        }
+//        out.println(Bob);
+        Animal test_animal = new Animal();
+        out.println(test_animal);
+        String[] moves = {"f", "r", "r", "ks", "r", "b", "r", "f", "f", "f", "f", "r", "r"};
+        for (MoveDirection move: OptionsParser.parse(moves)) {
+            test_animal.move(move);
         }
-        out.println(Bob);
+        out.println(test_animal);
     }
 }
