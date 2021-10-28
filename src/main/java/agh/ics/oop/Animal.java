@@ -1,16 +1,37 @@
 package agh.ics.oop;
 
 public class Animal {
-    private MapDirection direction = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
-    
-    public String toString() {
-        return "Direction: " + this.direction.toString() + " Position: " + this.position.toString(); 
+    private MapDirection direction;
+    private Vector2d position;
+    private IWorldMap map;
+
+    public Animal() {
+        this.direction = MapDirection.NORTH;
+        this.position = new Vector2d(2, 2);
+        // what to initiate this.map with?
+    }
+
+    public Animal(IWorldMap map) {
+        this.direction = MapDirection.NORTH;
+        this.position = new Vector2d(2, 2);
+        this.map = map;
+    }
+
+    public Animal(IWorldMap map, Vector2d initialPosition) {
+        this.direction = MapDirection.NORTH;
+        this.position = new Vector2d(initialPosition.x, initialPosition.y);
+        this.map = map;
+    }
+
+    protected MapDirection getDirection() {
+        return this.direction;
+    }
+
+    protected Vector2d getPosition() {
+        return this.position;
     }
 
     public void move(MoveDirection direction) {
-        Vector2d lower_left_bound = new Vector2d(0, 0);
-        Vector2d upper_right_bound = new Vector2d(4, 4);
         Vector2d new_position = new Vector2d(this.position.x, this.position.y);
         switch (direction) {
             case LEFT -> this.direction = this.direction.previous();
@@ -18,8 +39,21 @@ public class Animal {
             case FORWARD -> new_position = this.position.add(this.direction.toUnitVector());
             case BACKWARD -> new_position = this.position.subtract(this.direction.toUnitVector());
         }
-        if ( new_position.precedes(upper_right_bound) && new_position.follows(lower_left_bound)) {
+        if(this.map == null || this.map.canMoveTo(new_position)) {
             this.position = new_position;
         }
+    }
+
+    boolean isAt(Vector2d position) {
+        return this.position.equals(position);
+    }
+
+    public String toString() {
+        return switch (this.direction) {
+            case NORTH -> "N";
+            case EAST -> "E";
+            case SOUTH -> "S";
+            case WEST -> "W";
+        };
     }
 }
