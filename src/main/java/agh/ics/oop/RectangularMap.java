@@ -46,7 +46,7 @@ public class RectangularMap implements IWorldMap{
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override
