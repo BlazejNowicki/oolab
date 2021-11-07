@@ -20,12 +20,7 @@ public class RectangularMap implements IWorldMap{
     public boolean canMoveTo(Vector2d position) {
         if (!(position.precedes(this.upper_right_bound) && position.follows(this.lower_left_bound)))
             return false;
-        for(Animal animal: this.animals) {
-            if (animal.isAt(position)) {
-                return false;
-            }
-        }
-        return true;
+        return !isOccupied(position);
     }
 
     @Override
@@ -39,8 +34,6 @@ public class RectangularMap implements IWorldMap{
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        if (!(position.precedes(this.upper_right_bound) && position.follows(this.lower_left_bound)))
-            return false;
         for(Animal animal: this.animals) {
             if (animal.isAt(position)) {
                 return true;
@@ -51,11 +44,9 @@ public class RectangularMap implements IWorldMap{
 
     @Override
     public Object objectAt(Vector2d position) {
-        for(Animal animal: animals) {
-            if(animal.isAt(position)) {
+        for(Animal animal: animals)
+            if(animal.isAt(position))
                 return animal;
-            }
-        }
         return null;
     }
 
