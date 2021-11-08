@@ -2,10 +2,9 @@ package agh.ics.oop;
 
 import org.junit.jupiter.api.Test;
 
-import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SimulationEngineTest {
+public class RectangularMapTest {
     @Test
     void A(){
         String[] moves = {"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"};
