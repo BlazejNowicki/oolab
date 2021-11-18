@@ -6,8 +6,6 @@ import java.lang.Math;
 
 public class GrassField extends AbstractWorldMap implements IWorldMap{
     private final ArrayList<Grass> tufts;
-    private Vector2d upper_bound;
-    private Vector2d lower_bound;
 
     public GrassField(int num_of_tufts) {
         this.tufts = new ArrayList<>(num_of_tufts);
@@ -46,20 +44,22 @@ public class GrassField extends AbstractWorldMap implements IWorldMap{
         return null;
     }
 
-    private void updateBounds(Vector2d new_position) {
+    private void checkOne(Vector2d new_position){
         this.upper_bound = new Vector2d(Integer.max(new_position.x, this.upper_bound.x),
                 Integer.max(new_position.y, this.upper_bound.y));
         this.lower_bound = new Vector2d(Integer.min(new_position.x, this.lower_bound.x),
                 Integer.min(new_position.y, this.lower_bound.y));
     }
 
-    public String toString(){
+    @Override
+    protected void updateBounds() {
         this.upper_bound = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
         this.lower_bound = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
         for (Animal animal: this.animals)
-            this.updateBounds(animal.getPosition());
+            this.checkOne(animal.getPosition());
         for (Grass grass: this.tufts)
-            this.updateBounds(grass.getPosition());
-        return this.visualizer.draw(this.lower_bound, this.upper_bound);
+            this.checkOne(grass.getPosition());
     }
+
+
 }

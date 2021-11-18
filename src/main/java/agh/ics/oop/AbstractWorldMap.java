@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public abstract class AbstractWorldMap implements IWorldMap{
     protected final ArrayList<Animal> animals;
     protected final MapVisualizer visualizer;
+    protected Vector2d upper_bound;
+    protected Vector2d lower_bound;
 
     public AbstractWorldMap() {
         this.animals = new ArrayList<>();
@@ -24,5 +26,13 @@ public abstract class AbstractWorldMap implements IWorldMap{
             return true;
         }
         return false;
+    }
+
+    abstract protected void updateBounds();
+
+    @Override
+    public String toString(){
+        this.updateBounds();
+        return this.visualizer.draw(this.lower_bound, this.upper_bound);
     }
 }
