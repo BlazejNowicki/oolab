@@ -1,25 +1,26 @@
 package agh.ics.oop;
 
-public class Animal {
-    private MapDirection direction;
-    private Vector2d position;
-    private IWorldMap map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
-    public Animal() {
-        this.direction = MapDirection.NORTH;
-        this.position = new Vector2d(2, 2);
-        // what to initiate this.map with?
-    }
+public class Animal {
+    private MapDirection direction = MapDirection.NORTH;
+    private Vector2d position;
+    private final IWorldMap map;
+    private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(IWorldMap map) {
-        this.direction = MapDirection.NORTH;
         this.position = new Vector2d(2, 2);
+        this.observers.add((IPositionChangeObserver) map);
         this.map = map;
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
-        this.direction = MapDirection.NORTH;
         this.position = new Vector2d(initialPosition.x, initialPosition.y);
+//        this.observers.add((IPositionChangeObserver) map);
+        this.addObserver((IPositionChangeObserver) map);
         this.map = map;
     }
 
@@ -40,6 +41,7 @@ public class Animal {
             case BACKWARD -> new_position = this.position.subtract(this.direction.toUnitVector());
         }
         if(this.map == null || this.map.canMoveTo(new_position)) {
+            this.positionChanged(this.position, new_position);
             this.position = new_position;
         }
     }
@@ -55,5 +57,19 @@ public class Animal {
             case SOUTH -> "S";
             case WEST -> "W";
         };
+    }
+
+    void addObserver(IPositionChangeObserver observer) {
+        this.observers.add(observer);
+    }
+
+    void removeObserver(IPositionChangeObserver observer){
+        this.observers.remove(observer);
+    }
+
+    private void positionChanged(Vector2d old_position, Vector2d new_position){
+        for (IPositionChangeObserver observer: this.observers) {
+            observer.positionChanged(old_position, new_position);
+        }
     }
 }

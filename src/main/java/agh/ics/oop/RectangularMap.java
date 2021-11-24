@@ -1,8 +1,6 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-
-public class RectangularMap extends AbstractWorldMap implements IWorldMap{
+public class RectangularMap extends AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     public RectangularMap(int width, int height) {
         super();
         this.lower_bound = new Vector2d(0,0);
@@ -18,14 +16,12 @@ public class RectangularMap extends AbstractWorldMap implements IWorldMap{
 
     @Override
     public Object objectAt(Vector2d position) {
-        for(Animal animal: animals)
-            if(animal.isAt(position))
-                return animal;
-        return null;
+        return this.animals.get(position);
     }
 
     @Override
     protected void updateBounds() {
 //        ¯\_(ツ)_/¯
+//        Map limits are defined at the beginning.
     }
 }

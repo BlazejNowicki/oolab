@@ -1,14 +1,16 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.lang.Math;
 
-public class GrassField extends AbstractWorldMap implements IWorldMap{
-    private final ArrayList<Grass> tufts;
+public class GrassField extends AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
+    private final Map<Vector2d, Grass> tufts;
 
     public GrassField(int num_of_tufts) {
-        this.tufts = new ArrayList<>(num_of_tufts);
+        this.tufts = new LinkedHashMap<>();
         Random rand = new Random();
         rand.setSeed(42);
         int sqrt_bound = (int)Math.sqrt(10*num_of_tufts);
@@ -20,7 +22,7 @@ public class GrassField extends AbstractWorldMap implements IWorldMap{
                 int new_y_cord = rand.nextInt(sqrt_bound);
                 new_vector = new Vector2d(new_x_cord, new_y_cord);
             } while (this.objectAt(new_vector) != null);
-            this.tufts.add(new Grass(new_vector));
+            this.tufts.put(new_vector, new Grass(new_vector));
         }
     }
 
@@ -32,16 +34,12 @@ public class GrassField extends AbstractWorldMap implements IWorldMap{
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (Animal animal: this.animals) {
-            if(animal.isAt(position))
-                return animal;
+        Animal candidate = this.animals.get(position);
+        if (candidate != null){
+            return candidate;
+        } else {
+            return this.tufts.get(position);
         }
-        for (Grass grass: this.tufts) {
-            if (grass.getPosition().equals(position)) {
-                return grass;
-            }
-        }
-        return null;
     }
 
     private void checkOne(Vector2d new_position){
@@ -55,9 +53,9 @@ public class GrassField extends AbstractWorldMap implements IWorldMap{
     protected void updateBounds() {
         this.upper_bound = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
         this.lower_bound = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        for (Animal animal: this.animals)
+        for (Animal animal: this.animals.values())
             this.checkOne(animal.getPosition());
-        for (Grass grass: this.tufts)
+        for (Grass grass: this.tufts.values())
             this.checkOne(grass.getPosition());
     }
 
