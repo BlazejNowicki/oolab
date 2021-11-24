@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 public class Animal {
     private MapDirection direction = MapDirection.NORTH;
@@ -13,13 +10,12 @@ public class Animal {
 
     public Animal(IWorldMap map) {
         this.position = new Vector2d(2, 2);
-        this.observers.add((IPositionChangeObserver) map);
+        this.addObserver((IPositionChangeObserver) map);
         this.map = map;
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         this.position = new Vector2d(initialPosition.x, initialPosition.y);
-//        this.observers.add((IPositionChangeObserver) map);
         this.addObserver((IPositionChangeObserver) map);
         this.map = map;
     }
