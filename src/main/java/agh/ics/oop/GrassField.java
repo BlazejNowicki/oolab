@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
@@ -8,9 +7,12 @@ import java.lang.Math;
 
 public class GrassField extends AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     private final Map<Vector2d, Grass> tufts;
+    private final MapBoundary grass_bounds;
+
 
     public GrassField(int num_of_tufts) {
         this.tufts = new LinkedHashMap<>();
+        this.grass_bounds = new MapBoundary();
         Random rand = new Random();
         rand.setSeed(42);
         int sqrt_bound = (int)Math.sqrt(10*num_of_tufts);
@@ -22,7 +24,9 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
                 int new_y_cord = rand.nextInt(sqrt_bound);
                 new_vector = new Vector2d(new_x_cord, new_y_cord);
             } while (this.objectAt(new_vector) != null);
-            this.tufts.put(new_vector, new Grass(new_vector));
+            Grass new_grass = new Grass(new_vector);
+            this.tufts.put(new_vector, new_grass);
+            this.grass_bounds.addObjectToTrack(new_grass);
         }
     }
 
@@ -51,12 +55,14 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
 
     @Override
     protected void updateBounds() {
-        this.upper_bound = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        this.lower_bound = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        for (Animal animal: this.animals.values())
-            this.checkOne(animal.getPosition());
-        for (Grass grass: this.tufts.values())
-            this.checkOne(grass.getPosition());
+        this.lower_bound = Vector2d.lowerLeft(
+                this.grass_bounds.getLowerBound(),
+                this.animals_bounds.getLowerBound()
+        );
+        this.upper_bound = Vector2d.upperRight(
+                this.grass_bounds.getUpperBound(),
+                this.animals_bounds.getUpperBound()
+        );
     }
 
 
