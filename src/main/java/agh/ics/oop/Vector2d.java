@@ -11,6 +11,14 @@ public class Vector2d {
         this.y = y;
     }
 
+    public static Vector2d lowerLeft(Vector2d first, Vector2d second){
+        return new Vector2d(Math.min(first.x, second.x), Math.min(first.y, second.y));
+    }
+
+    public static Vector2d upperRight(Vector2d first, Vector2d second){
+        return new Vector2d(Math.max(first.x, second.x), Math.max(first.y, second.y));
+    }
+
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
     }

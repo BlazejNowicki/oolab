@@ -3,9 +3,8 @@ package agh.ics.oop;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentMap;
 
-public class Animal{
+public class Animal extends AbstractMapObject{
     private MapDirection direction = MapDirection.NORTH;
-    private Vector2d position;
     private final IWorldMap map;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
@@ -21,10 +20,6 @@ public class Animal{
 
     protected MapDirection getDirection() {
         return this.direction;
-    }
-
-    protected Vector2d getPosition() {
-        return this.position;
     }
 
     public void move(MoveDirection direction) {
