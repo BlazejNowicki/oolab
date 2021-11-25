@@ -20,13 +20,14 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     }
 
     @Override
-    public boolean place(Animal animal) {
+    public void place(Animal animal) {
         Vector2d new_position = animal.getPosition();
         if(this.canMoveTo(new_position)){
             this.animals.put(new_position, animal);
-            return true;
+            animal.addObserver(this);
+        } else {
+            throw new IllegalArgumentException("Can not place at specified position");
         }
-        return false;
     }
 
     abstract protected void updateBounds();

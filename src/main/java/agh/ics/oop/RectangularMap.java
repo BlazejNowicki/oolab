@@ -21,7 +21,6 @@ public class RectangularMap extends AbstractWorldMap implements IWorldMap, IPosi
 
     @Override
     protected void updateBounds() {
-//        ¯\_(ツ)_/¯
 //        Map limits are defined at the beginning.
     }
 }

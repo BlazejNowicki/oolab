@@ -10,12 +10,10 @@ public class OptionsParser {
                 case "b", "backward" -> translated[t] = MoveDirection.BACKWARD;
                 case "l", "left" -> translated[t] = MoveDirection.LEFT;
                 case "r", "right" -> translated[t] = MoveDirection.RIGHT;
-                default -> t--; // don't increment t
+                default -> throw new IllegalArgumentException(move + " is not a legal move exceptions");
             }
             t++;
         }
-        MoveDirection[] reduced = new MoveDirection[t];
-        System.arraycopy(translated, 0, reduced, 0, t);
-        return reduced;
+        return translated;
     }
 }

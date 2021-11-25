@@ -30,27 +30,17 @@ public class World {
     }
 
     public static void main(String[] args) {
-
-//        String[] moves = {"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"};
-//        MoveDirection[] directions = new OptionsParser().parse(moves);
-////        IWorldMap map = new RectangularMap(15, 15);
-//        IWorldMap map = new GrassField(20);
-//        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
-//        IEngine engine = new SimulationEngine(directions, map, positions);
-//        out.print(map);
-//        engine.run();
-//        out.print(map);
-
-        // -----------------------------------------------------
-        IWorldMap map = new GrassField(10);
-        out.print(map);
-        Animal A = new Animal(map, new Vector2d(2,3));
-        Animal B = new Animal(map, new Vector2d(2,2));
-        map.place(A);
-        map.place(B);
-        out.print(map);
-        B.move(MoveDirection.FORWARD);
-        B.move(MoveDirection.RIGHT);
-        out.print(map);
+        try {
+            String[] moves = {"f"};
+            MoveDirection[] directions = new OptionsParser().parse(moves);
+            IWorldMap map = new RectangularMap(10, 5);
+            Vector2d[] positions = { new Vector2d(-2,2)};
+            IEngine engine = new SimulationEngine(directions, map, positions);
+            out.print(map);
+            engine.run();
+            out.print(map);
+        } catch ( IllegalArgumentException e){
+            out.println(e);
+        }
     }
 }

@@ -13,9 +13,8 @@ public class SimulationEngine implements IEngine{
          this.map = map;
          for(Vector2d position: positions) {
              Animal new_animal = new Animal(map, position);
-             if (map.place(new_animal) ) {
-                 this.animals.add(new_animal);
-             }
+             map.place(new_animal);
+             this.animals.add(new_animal);
          }
     }
 

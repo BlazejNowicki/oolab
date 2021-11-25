@@ -1,8 +1,9 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentMap;
 
-public class Animal {
+public class Animal{
     private MapDirection direction = MapDirection.NORTH;
     private Vector2d position;
     private final IWorldMap map;
@@ -10,13 +11,11 @@ public class Animal {
 
     public Animal(IWorldMap map) {
         this.position = new Vector2d(2, 2);
-        this.addObserver((IPositionChangeObserver) map);
         this.map = map;
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         this.position = new Vector2d(initialPosition.x, initialPosition.y);
-        this.addObserver((IPositionChangeObserver) map);
         this.map = map;
     }
 
@@ -42,7 +41,7 @@ public class Animal {
         }
     }
 
-    boolean isAt(Vector2d position) {
+    public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
 
@@ -55,11 +54,11 @@ public class Animal {
         };
     }
 
-    void addObserver(IPositionChangeObserver observer) {
+    public void addObserver(IPositionChangeObserver observer) {
         this.observers.add(observer);
     }
 
-    void removeObserver(IPositionChangeObserver observer){
+    public void removeObserver(IPositionChangeObserver observer){
         this.observers.remove(observer);
     }
 
