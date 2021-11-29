@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class AbstractWorldMap implements IWorldMap{
     protected final ArrayList<Animal> animals;
-    protected final MapVisualizer visualizer;
+    protected final MapVisualizer visualizer;   // to pole może być prywatne
     protected Vector2d upper_bound;
     protected Vector2d lower_bound;
 
@@ -27,6 +27,8 @@ public abstract class AbstractWorldMap implements IWorldMap{
         }
         return false;
     }
+
+    //a objectAt? a canMoveTo?
 
     abstract protected void updateBounds();
 

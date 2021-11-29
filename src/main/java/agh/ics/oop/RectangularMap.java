@@ -26,6 +26,6 @@ public class RectangularMap extends AbstractWorldMap implements IWorldMap{
 
     @Override
     protected void updateBounds() {
-//        ¯\_(ツ)_/¯
+//        ¯\_(ツ)_/¯ // ten komentarz nie mówi za wiele
     }
 }

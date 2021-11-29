@@ -5,7 +5,7 @@ public class Animal {
     private Vector2d position;
     private IWorldMap map;
 
-    public Animal() {
+    public Animal() {   // tego konstruktora nie powinno być
         this.direction = MapDirection.NORTH;
         this.position = new Vector2d(2, 2);
         // what to initiate this.map with?
