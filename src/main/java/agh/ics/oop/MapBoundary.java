@@ -4,10 +4,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MapBoundary implements IPositionChangeObserver{
-    private SortedSet<MapBoudnaryItem> axisX = new TreeSet<>();
-    private SortedSet<MapBoudnaryItem> axisY = new TreeSet<>();
-
-
+    private final SortedSet<MapBoudnaryItem> axisX = new TreeSet<>();
+    private final SortedSet<MapBoudnaryItem> axisY = new TreeSet<>();
 
     public void addObjectToTrack(AbstractMapObject obj){
         Vector2d position = obj.getPosition();

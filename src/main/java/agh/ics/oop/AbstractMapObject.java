@@ -1,9 +1,11 @@
 package agh.ics.oop;
 
-public class AbstractMapObject {
+abstract class AbstractMapObject {
     protected Vector2d position;
 
     protected Vector2d getPosition() {
         return this.position;
     }
+
+    abstract public String toString();
 }

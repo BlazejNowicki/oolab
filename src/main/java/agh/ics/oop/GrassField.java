@@ -57,11 +57,11 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
     protected void updateBounds() {
         this.lower_bound = Vector2d.lowerLeft(
                 this.grass_bounds.getLowerBound(),
-                this.animals_bounds.getLowerBound()
+                this.animal_bounds.getLowerBound()
         );
         this.upper_bound = Vector2d.upperRight(
                 this.grass_bounds.getUpperBound(),
-                this.animals_bounds.getUpperBound()
+                this.animal_bounds.getUpperBound()
         );
     }
 
