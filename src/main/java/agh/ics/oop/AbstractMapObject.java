@@ -7,5 +7,4 @@ abstract class AbstractMapObject {
         return this.position;
     }
 
-    abstract public String toString();
 }

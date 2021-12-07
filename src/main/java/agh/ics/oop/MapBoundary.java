@@ -11,6 +11,10 @@ public class MapBoundary implements IPositionChangeObserver{
         Vector2d position = obj.getPosition();
         axisX.add(new MapBoudnaryItem(position.x, position.y));
         axisY.add(new MapBoudnaryItem(position.y, position.x));
+
+        if (obj instanceof Animal){
+            ((Animal) obj).addObserver(this);
+        }
     }
 
     @Override

@@ -11,6 +11,7 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
 
 
     public GrassField(int num_of_tufts) {
+        super();
         this.tufts = new LinkedHashMap<>();
         this.grass_bounds = new MapBoundary();
         Random rand = new Random();
@@ -31,6 +32,12 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
     }
 
     @Override
+    public void place(Animal animal){
+        super.place(animal);
+        this.animal_bounds.addObjectToTrack(animal);
+    }
+
+    @Override
     public boolean canMoveTo(Vector2d position) {
         Object obj = this.objectAt(position);
         return obj == null || obj instanceof Grass;
@@ -44,13 +51,6 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
         } else {
             return this.tufts.get(position);
         }
-    }
-
-    private void checkOne(Vector2d new_position){
-        this.upper_bound = new Vector2d(Integer.max(new_position.x, this.upper_bound.x),
-                Integer.max(new_position.y, this.upper_bound.y));
-        this.lower_bound = new Vector2d(Integer.min(new_position.x, this.lower_bound.x),
-                Integer.min(new_position.y, this.lower_bound.y));
     }
 
     @Override

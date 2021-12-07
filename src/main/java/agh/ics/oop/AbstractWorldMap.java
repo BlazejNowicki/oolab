@@ -26,9 +26,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         Vector2d new_position = animal.getPosition();
         if(this.canMoveTo(new_position)){
             this.animals.put(new_position, animal);
-            this.animal_bounds.addObjectToTrack(animal);
             animal.addObserver(this);
-            animal.addObserver(animal_bounds);
         } else {
             throw new IllegalArgumentException("Can not place at specified position");
         }
@@ -51,5 +49,15 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         Animal moving_animal = this.animals.get(oldPosition);
         this.animals.remove(oldPosition);
         this.animals.put(newPosition, moving_animal);
+    }
+
+    public Vector2d getLower_bound() {
+        this.updateBounds();
+        return this.lower_bound;
+    }
+
+    public Vector2d getUpper_bound() {
+        this.updateBounds();
+        return this.upper_bound;
     }
 }

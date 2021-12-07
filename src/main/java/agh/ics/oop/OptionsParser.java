@@ -1,7 +1,7 @@
 package agh.ics.oop;
 
 public class OptionsParser {
-    static MoveDirection[] parse(String[] moves) {
+    public static MoveDirection[] parse(String[] moves) {
         MoveDirection[] translated = new MoveDirection[moves.length];
         int t = 0;
         for (String move : moves) {

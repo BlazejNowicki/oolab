@@ -2,6 +2,9 @@ package agh.ics.oop;
 
 import static java.lang.System.out;
 
+import agh.ics.oop.gui.App;
+import javafx.application.Application;
+
 public class World {
     private static void run(Direction[] directions){
         out.println("Start");
@@ -30,17 +33,6 @@ public class World {
     }
 
     public static void main(String[] args) {
-        try {
-            String[] moves = {"f"};
-            MoveDirection[] directions = new OptionsParser().parse(moves);
-            IWorldMap map = new RectangularMap(10, 5);
-            Vector2d[] positions = { new Vector2d(-2,2)};
-            IEngine engine = new SimulationEngine(directions, map, positions);
-            out.print(map);
-            engine.run();
-            out.print(map);
-        } catch ( IllegalArgumentException e){
-            out.println(e);
-        }
+        Application.launch(App.class, args);
     }
 }
