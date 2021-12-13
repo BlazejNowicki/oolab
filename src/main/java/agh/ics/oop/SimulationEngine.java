@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class SimulationEngine implements IEngine, Runnable{
-    private final MoveDirection[] moves;
+    private MoveDirection[] moves;
     private final ArrayList<Animal> animals;
     private final IWorldMap map;
     private final LinkedList<IMapChangeObserver> observers;
@@ -21,6 +21,16 @@ public class SimulationEngine implements IEngine, Runnable{
              map.place(new_animal);
              this.animals.add(new_animal);
          }
+    }
+
+    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] positions) {
+        this(moves, map, positions, 0);
+    }
+
+    public void setMoves(String moves_string) {
+        System.out.println(moves_string);
+        String[] split = moves_string.split(" ");
+        this.moves = OptionsParser.parse(split);
     }
 
     public void addObserver(IMapChangeObserver new_observer){

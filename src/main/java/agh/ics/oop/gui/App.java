@@ -16,6 +16,10 @@ import javafx.stage.Stage;
 public class App extends Application implements IMapChangeObserver {
     private AbstractWorldMap map;
     private final GridPane grid = new GridPane();
+    private Thread thread;
+    private SimulationEngine engine;
+    private TextField moves_input;
+    private boolean started_flag = false;
 
     @Override
     public void start(Stage primaryStage){
@@ -23,10 +27,17 @@ public class App extends Application implements IMapChangeObserver {
         VBox container = new VBox();
         HBox input_section = new HBox();
         Button start_button = new Button("Start");
-        TextField moves_input = new TextField();
+        start_button.setOnAction((value) -> {
+            this.engine.setMoves(this.moves_input.getText());
+            if(! started_flag){
+                this.thread.start();
+                this.started_flag = true;
+            }
+        });
+        this.moves_input = new TextField();
         container.getChildren().add(this.grid);
         container.getChildren().add(input_section);
-        input_section.getChildren().add(moves_input);
+        input_section.getChildren().add(this.moves_input);
         input_section.getChildren().add(start_button);
         input_section.setPadding(new Insets(10, 10, 10, 10));
         Scene scene = new Scene(container);
@@ -88,6 +99,7 @@ public class App extends Application implements IMapChangeObserver {
         }
     }
 
+
     @Override
     public void init() throws Exception {
         try {
@@ -95,14 +107,16 @@ public class App extends Application implements IMapChangeObserver {
             MoveDirection[] directions = new OptionsParser().parse(moves);
             this.map = new GrassField(30);
             Vector2d[] positions = { new Vector2d(-2,2)};
-            SimulationEngine engine = new SimulationEngine(directions, this.map, positions, 1000);
-            engine.addObserver(this);
-            Thread thread = new Thread(engine);
-            thread.start();
+            this.engine = new SimulationEngine(directions, this.map, positions, 500);
+            this.engine.addObserver(this);
+            this. thread = new Thread(this.engine);
+//            thread.start();
         } catch ( IllegalArgumentException e){
             System.out.println(e);
         }
     }
+
+
 
     @Override
     public void mapChanged() {
