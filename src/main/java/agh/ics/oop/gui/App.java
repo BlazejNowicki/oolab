@@ -2,62 +2,74 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
-import static java.lang.System.out;
-
-public class App extends Application {
+public class App extends Application implements IMapChangeObserver {
     private AbstractWorldMap map;
+    private final GridPane grid = new GridPane();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        GridPane gridPane = new GridPane();
-        gridPane.setMinSize(400, 200);
-        gridPane.setPadding(new Insets(10, 10, 10, 10));
-
-        gridPane.setGridLinesVisible(true);
-        Scene scene = new Scene(gridPane, 400, 400);
+    public void start(Stage primaryStage){
         primaryStage.setTitle("World Map Visualization");
-
-        this.addObjectsToGrid(gridPane);
+        VBox container = new VBox();
+        HBox input_section = new HBox();
+        Button start_button = new Button("Start");
+        TextField moves_input = new TextField();
+        container.getChildren().add(this.grid);
+        container.getChildren().add(input_section);
+        input_section.getChildren().add(moves_input);
+        input_section.getChildren().add(start_button);
+        input_section.setPadding(new Insets(10, 10, 10, 10));
+        Scene scene = new Scene(container);
+        this.renderGrid();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void addObjectsToGrid(GridPane gridPane){
+    private void renderGrid(){
+        this.grid.getChildren().clear();
+        this.grid.getColumnConstraints().clear();
+        this.grid.getRowConstraints().clear();
+
+        this.grid.setMinSize(400, 200);
+        this.grid.setPadding(new Insets(10, 10, 10, 10));
+        this.grid.setGridLinesVisible(true);
+
         Vector2d lower = this.map.getLower_bound();
         Vector2d upper = this.map.getUpper_bound();
 
         // columns and rows settings
         for (int i=0; lower.x + i <= upper.x+1; i++){
-            gridPane.getColumnConstraints().add(new ColumnConstraints(20));
+            this.grid.getColumnConstraints().add(new ColumnConstraints(50));
         }
         for (int i=0; lower.y + i <= upper.y+1; i++){
-            gridPane.getRowConstraints().add(new RowConstraints(20));
+            this.grid.getRowConstraints().add(new RowConstraints(50));
         }
 
         // axis description
         Label l = new Label("y/x");
-        gridPane.add(l, 0, 0);
+        l.setAlignment(Pos.CENTER);
+        this.grid.add(l, 0, 0);
 
         for (int i = lower.x; i <= upper.x; i++){
             Label new_element = new Label(Integer.toString(i));
             GridPane.setHalignment(new_element, HPos.CENTER);
-            gridPane.add(new_element, i - lower.x+1, 0);
+            this.grid.add(new_element, i - lower.x+1, 0);
         }
 
         for (int i = lower.y; i <= upper.y; i++){
             Label new_element = new Label(Integer.toString(i));
             GridPane.setHalignment(new_element, HPos.CENTER);
-            gridPane.add(new_element, 0, upper.y+1-i);
+            this.grid.add(new_element, 0, upper.y+1-i);
         }
 
         // adding objects to map
@@ -66,9 +78,10 @@ public class App extends Application {
                 if (map.isOccupied(new Vector2d(x,y))){
                     Object obj = this.map.objectAt(new Vector2d(x,y));
                     if (obj != null){
-                        Label item = new Label(obj.toString());
+                        GuiElementBox item = new GuiElementBox((AbstractMapObject) obj);
+                        item.setAlignment(Pos.CENTER);
                         GridPane.setHalignment(item, HPos.CENTER);
-                        gridPane.add(item, x-lower.x+1, upper.y+1-y);
+                        this.grid.add(item, x-lower.x+1, upper.y+1-y);
                     }
                 }
             }
@@ -77,17 +90,26 @@ public class App extends Application {
 
     @Override
     public void init() throws Exception {
-        super.init();
         try {
-            String[] moves = {"l", "f","f", "f"};
+            String[] moves = {"r", "f","f", "f"};
             MoveDirection[] directions = new OptionsParser().parse(moves);
             this.map = new GrassField(30);
             Vector2d[] positions = { new Vector2d(-2,2)};
-            IEngine engine = new SimulationEngine(directions, this.map, positions);
-            engine.run();
-//            out.println(map);
+            SimulationEngine engine = new SimulationEngine(directions, this.map, positions, 1000);
+            engine.addObserver(this);
+            Thread thread = new Thread(engine);
+            thread.start();
         } catch ( IllegalArgumentException e){
-            out.println(e);
+            System.out.println(e);
         }
+    }
+
+    @Override
+    public void mapChanged() {
+//        grid.setGridLinesVisible(false);
+        Platform.runLater(() -> {
+            this.grid.setGridLinesVisible(false);
+            renderGrid();
+        });
     }
 }

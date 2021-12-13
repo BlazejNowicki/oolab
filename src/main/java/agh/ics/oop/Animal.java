@@ -62,4 +62,15 @@ public class Animal extends AbstractMapObject{
             observer.positionChanged(old_position, new_position);
         }
     }
+
+
+    @Override
+    public String getResourcePath() {
+        return switch (this.direction) {
+            case NORTH -> "src/main/resources/up.png";
+            case SOUTH ->  "src/main/resources/down.png";
+            case WEST ->  "src/main/resources/left.png";
+            case EAST ->  "src/main/resources/right.png";
+        };
+    }
 }
