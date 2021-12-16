@@ -16,10 +16,8 @@ import javafx.stage.Stage;
 public class App extends Application implements IMapChangeObserver {
     private AbstractWorldMap map;
     private final GridPane grid = new GridPane();
-    private Thread thread;
     private SimulationEngine engine;
     private TextField moves_input;
-    private boolean started_flag = false;
 
     @Override
     public void start(Stage primaryStage){
@@ -28,11 +26,9 @@ public class App extends Application implements IMapChangeObserver {
         HBox input_section = new HBox();
         Button start_button = new Button("Start");
         start_button.setOnAction((value) -> {
+            Thread thread = new Thread(this.engine);
             this.engine.setMoves(this.moves_input.getText());
-            if(! started_flag){
-                this.thread.start();
-                this.started_flag = true;
-            }
+            thread.start();
         });
         this.moves_input = new TextField();
         container.getChildren().add(this.grid);
@@ -109,8 +105,6 @@ public class App extends Application implements IMapChangeObserver {
             Vector2d[] positions = { new Vector2d(-2,2)};
             this.engine = new SimulationEngine(directions, this.map, positions, 500);
             this.engine.addObserver(this);
-            this. thread = new Thread(this.engine);
-//            thread.start();
         } catch ( IllegalArgumentException e){
             System.out.println(e);
         }
