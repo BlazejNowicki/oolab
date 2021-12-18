@@ -1,63 +1,87 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
+import javafx.application.Platform;
+
 import java.util.LinkedList;
 
-public class SimulationEngine implements IEngine, Runnable{
-    private MoveDirection[] moves;
-    private final ArrayList<Animal> animals;
-    private final IWorldMap map;
+public class SimulationEngine implements Runnable{
+    private final IMap map;
+    private final SideIdentifier side;
+    private volatile boolean running = true;
+    private volatile boolean paused = false;
+    private final Object pauseLock = new Object();
     private final LinkedList<IMapChangeObserver> observers;
-    private final int delay;
 
-    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] positions, int delay) {
-         this.moves = moves;
-         this.animals = new ArrayList<>();
-         this.observers = new LinkedList<>();
-         this.map = map;
-         this.delay = delay;
-         for(Vector2d position: positions) {
-             Animal new_animal = new Animal(map, position);
-             map.place(new_animal);
-             this.animals.add(new_animal);
-         }
+    public SimulationEngine(IMap map, SideIdentifier side){
+        this.side = side;
+        this.map = map;
+        this.observers = new LinkedList<>();
     }
 
-    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] positions) {
-        this(moves, map, positions, 0);
+    public IMap getMap() {
+        return map;
     }
 
-    public void setMoves(String moves_string) {
-        System.out.println(moves_string);
-        String[] split = moves_string.split(" ");
-        this.moves = OptionsParser.parse(split);
-    }
-
-    public void addObserver(IMapChangeObserver new_observer){
-        this.observers.add(new_observer);
+    public void addObserver(IMapChangeObserver observer){
+        this.observers.push(observer);
     }
 
     public void mapChanged(){
         for (IMapChangeObserver observer: this.observers){
-            observer.mapChanged();
+            observer.mapChanged(this.side);
         }
     }
 
     @Override
     public void run() {
-        if (animals.size() == 0) {
-            return;
-        }
-        int animal_index = 0;
-        for(MoveDirection move: this.moves) {
+        // handle pause and resume change to toggle later
+        while (running) {
+            System.out.println("Start of generation");
+            synchronized (pauseLock) {
+                if (!running) {
+                    break;
+                }
+                if (paused) {
+                    try {
+                        synchronized (pauseLock) {
+                            pauseLock.wait();
+                        }
+                    } catch (InterruptedException ex) {
+                        break;
+                    }
+                    if (!running) {
+                        break;
+                    }
+                }
+            }
+            this.simulateGeneration();
             try{
-                Thread.sleep(this.delay);
+                Thread.sleep(2000);
             }catch(InterruptedException e){
                 System.out.println(e);
             }
-            this.animals.get(animal_index).move(move);
-            animal_index = (animal_index+1)%animals.size();
-            mapChanged();
+            System.out.println("End of generation");
+            Platform.runLater(this::mapChanged);
+        }
+    }
+
+    private void simulateGeneration(){
+        this.map.moveElements();
+    }
+
+    public void stop() {
+        this.running = false;
+        resume();
+    }
+
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void resume() {
+        synchronized (pauseLock) {
+            paused = false;
+            pauseLock.notifyAll();
         }
     }
 }

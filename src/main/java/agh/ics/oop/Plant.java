@@ -1,7 +1,7 @@
 package agh.ics.oop;
 
-public class Animal extends AbstractMapElement implements IMapElement{
-    public Animal(Vector2d position) {
+public class Plant extends AbstractMapElement implements IMapElement{
+    public Plant(Vector2d position) {
         super(position);
     }
 

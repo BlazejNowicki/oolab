@@ -1,5 +1,5 @@
 package agh.ics.oop;
 
 public interface IMapChangeObserver {
-    void mapChanged();
+    void mapChanged(SideIdentifier side);
 }
