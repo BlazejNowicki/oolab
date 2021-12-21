@@ -1,8 +1,9 @@
 package agh.ics.oop;
 
 public class Plant extends AbstractMapElement implements IMapElement{
-    public Plant(Vector2d position) {
-        super(position);
+
+    public Plant(Vector2d position, IMap map) {
+        super(position, map);
     }
 
     @Override

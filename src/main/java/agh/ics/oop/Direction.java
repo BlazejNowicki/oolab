@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import java.util.Objects;
 
 public class Direction {
     private int direction;
@@ -11,7 +10,6 @@ public class Direction {
         this.direction = direction;
     }
 
-//    public turn(int )
 
 
     @Override

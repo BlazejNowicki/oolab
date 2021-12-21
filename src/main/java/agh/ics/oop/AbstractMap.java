@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import com.sun.javafx.collections.MappingChange;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.Map;
 public abstract class AbstractMap implements IMap{
     protected final Vector2d lowerBound;
     protected final Vector2d upperBound;
-    protected final Map<Vector2d, LinkedList<Animal>> animals;
+    protected Map<Vector2d, LinkedList<Animal>> animals;
     protected final Map<Vector2d, LinkedList<Plant>> plants;
     protected final int width;
     protected final int height;
@@ -21,9 +23,27 @@ public abstract class AbstractMap implements IMap{
         this.plants = new HashMap<>();
     }
 
+    public abstract Vector2d newPosition(Vector2d position);
+
     @Override
     public void moveElements() {
-        // TODO dodać porusznie elementami
+        Map<Vector2d, LinkedList<Animal>> moved_animals = new HashMap<>();
+
+        for(int x=this.lowerBound.x; x <= this.upperBound.x; x++){
+            for (int y=lowerBound.y; y <= this.upperBound.y; y++){
+                Vector2d position = new Vector2d(x,y);
+                if (this.animals.containsKey(position)){
+                    for (Animal animal: this.animals.get(position)){
+                        Vector2d new_position = animal.makeMove();
+                        if (!moved_animals.containsKey(new_position)) {
+                            moved_animals.put(new_position, new LinkedList<>());
+                        }
+                        moved_animals.get(new_position).push(animal);
+                    }
+                }
+            }
+        }
+        this.animals = moved_animals;
         System.out.println("Moving elements");
     }
 

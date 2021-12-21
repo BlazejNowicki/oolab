@@ -55,13 +55,13 @@ public class SimulationEngine implements Runnable{
                 }
             }
             this.simulateGeneration();
+            System.out.println("End of generation");
+            Platform.runLater(this::mapChanged);
             try{
-                Thread.sleep(2000);
+                Thread.sleep(200);
             }catch(InterruptedException e){
                 System.out.println(e);
             }
-            System.out.println("End of generation");
-            Platform.runLater(this::mapChanged);
         }
     }
 
