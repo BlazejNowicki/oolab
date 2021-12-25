@@ -8,9 +8,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 public class MapGrid extends GridPane {
     // TODO pomyśleć o dodaniu jakis optyalizacji żeby nie ładować nowych zdjęć za każdym razem
@@ -58,15 +56,22 @@ public class MapGrid extends GridPane {
         // adding objects to map
         for (int x = lower.x; x<=upper.x; x++){
             for (int y = lower.y; y<=upper.y; y++){
-                if (map.isOccupied(new Vector2d(x,y))){
+                Vector2d position = new Vector2d(x,y);
+                StackPane pane = new StackPane();
+                if (map.isOccupied(position)){
                     Object obj = map.objectAt(new Vector2d(x,y));
                     if (obj != null){
                         GuiMapElement item = new GuiMapElement((AbstractMapElement) obj);
-                        item.setAlignment(Pos.CENTER);
-                        GridPane.setHalignment(item, HPos.CENTER);
-                        this.add(item, x-lower.x+1, upper.y+1-y);
+                        pane.getChildren().add(item);
                     }
                 }
+                if (map.isJungle(position)){
+                    pane.setStyle("-fx-background-color: #86d46c; -fx-border-color: gray");
+                } else {
+                    pane.setStyle("-fx-background-color: #af9c6a; -fx-border-color: gray");
+                }
+                StackPane.setAlignment(pane, Pos.CENTER);
+                this.add(pane, x-lower.x+1, upper.y+1-y);
             }
         }
     }

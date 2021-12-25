@@ -11,8 +11,11 @@ public interface IMap {
     boolean canMoveTo(Vector2d position);
 
     Vector2d newPosition(Vector2d position);
+    boolean isJungle(Vector2d position);
 
     void moveElements();
     void reproduction();
     void removeDead();
+    void spawnPlants();
+    void eatPlants();
 }

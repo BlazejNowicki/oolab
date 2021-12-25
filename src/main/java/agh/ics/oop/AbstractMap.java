@@ -11,6 +11,8 @@ public abstract class AbstractMap implements IMap{
     protected final Map<Vector2d, LinkedList<Plant>> plants;
     protected final int width;
     protected final int height;
+    protected Vector2d jungle_lower;
+    protected Vector2d jungle_upper;
 
     public AbstractMap(MapConfiguration conf){
         this.width = conf.width;
@@ -19,9 +21,34 @@ public abstract class AbstractMap implements IMap{
         this.upperBound = new Vector2d(width-1, height-1);
         this.animals = new HashMap<>();
         this.plants = new HashMap<>();
+
+        // TODO Czy to ma wgl sensowne rozwiązanie? VVV
+        int jungle_width = 2 * (int) Math.round((double)(conf.width-1)*conf.jungle_ratio/2);
+        if(conf.width % 2 == 0) jungle_width += 1;
+
+        int jungle_height = 2 * (int) Math.round((double)(conf.height-1)*conf.jungle_ratio/2);
+        if(conf.height % 2 == 0) jungle_height += 1;
+
+        this.jungle_lower = new Vector2d((conf.width-jungle_width) / 2 , (conf.height - jungle_height) / 2);
+        this.jungle_upper = new Vector2d((conf.width-jungle_width) / 2 + jungle_width,
+                (conf.height - jungle_height) / 2 + jungle_height);
+    }
+
+    public boolean isJungle(Vector2d position){
+        return position.precedes(this.jungle_upper) && position.follows(this.jungle_lower);
     }
 
     public abstract Vector2d newPosition(Vector2d position);
+
+    @Override
+    public void spawnPlants() {
+        // TODO impleent
+    }
+
+    @Override
+    public void eatPlants() {
+        // TODO implement
+    }
 
     @Override
     public void moveElements() {
@@ -53,7 +80,7 @@ public abstract class AbstractMap implements IMap{
                 Vector2d position = new Vector2d(x, y);
                 if (this.animals.containsKey(position) && this.animals.get(position).size() >= 2){
                     LinkedList<Animal> list = this.animals.get(position);
-                    list.sort((a,b) -> a.getEnergy() - b.getEnergy());
+                    list.sort((a,b) -> a.getEnergy() - b.getEnergy()); // TODO to sortownie można jeszcze przemyśleć
                     Animal animalA = list.get(0);
                     Animal animalB = list.get(1);
                     if ( animalA.getEnergy() > 4 && animalB.getEnergy() > 4){
