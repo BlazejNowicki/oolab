@@ -13,4 +13,6 @@ public interface IMap {
     Vector2d newPosition(Vector2d position);
 
     void moveElements();
+    void reproduction();
+    void removeDead();
 }

@@ -61,7 +61,7 @@ public class MapGrid extends GridPane {
                 if (map.isOccupied(new Vector2d(x,y))){
                     Object obj = map.objectAt(new Vector2d(x,y));
                     if (obj != null){
-                        GuiElementBox item = new GuiElementBox((AbstractMapElement) obj);
+                        GuiMapElement item = new GuiMapElement((AbstractMapElement) obj);
                         item.setAlignment(Pos.CENTER);
                         GridPane.setHalignment(item, HPos.CENTER);
                         this.add(item, x-lower.x+1, upper.y+1-y);

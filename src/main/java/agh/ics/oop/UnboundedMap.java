@@ -1,11 +1,12 @@
 package agh.ics.oop;
 
 public class UnboundedMap extends AbstractMap implements IMap{
-    public UnboundedMap(int width, int height){
-        super(width, height);
-        this.place(new Animal(new Vector2d(0,0), this));
-//        this.place(new Plant(new Vector2d(2,2), this));
-//        this.place(new Plant(new Vector2d(3,4), this));
+    public UnboundedMap(MapConfiguration conf){
+        super(conf);
+        this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
+        this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
+        this.place(new Plant(new Vector2d(2,2), this, conf.plant_energy));
+        this.place(new Plant(new Vector2d(3,4), this, conf.plant_energy));
     }
 
     @Override

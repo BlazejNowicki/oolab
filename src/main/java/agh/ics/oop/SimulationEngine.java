@@ -6,16 +6,16 @@ import java.util.LinkedList;
 
 public class SimulationEngine implements Runnable{
     private final IMap map;
-    private final SideIdentifier side;
     private volatile boolean running = true;
-    private volatile boolean paused = false;
+    private volatile boolean paused = true;
     private final Object pauseLock = new Object();
     private final LinkedList<IMapChangeObserver> observers;
+    private final int delay;
 
-    public SimulationEngine(IMap map, SideIdentifier side){
-        this.side = side;
+    public SimulationEngine(IMap map, int delay){
         this.map = map;
         this.observers = new LinkedList<>();
+        this.delay = delay;
     }
 
     public IMap getMap() {
@@ -28,15 +28,17 @@ public class SimulationEngine implements Runnable{
 
     public void mapChanged(){
         for (IMapChangeObserver observer: this.observers){
-            observer.mapChanged(this.side);
+            observer.mapChanged();
         }
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     @Override
     public void run() {
-        // handle pause and resume change to toggle later
         while (running) {
-            System.out.println("Start of generation");
             synchronized (pauseLock) {
                 if (!running) {
                     break;
@@ -54,11 +56,12 @@ public class SimulationEngine implements Runnable{
                     }
                 }
             }
+            System.out.println("Start of generation");
             this.simulateGeneration();
-            System.out.println("End of generation");
-            Platform.runLater(this::mapChanged);
+            System.out.println("End of generation\n");
+            Platform.runLater(this::mapChanged); // TODO Zastanowić się: Czy runLater ma być w tym miejscu?
             try{
-                Thread.sleep(200);
+                Thread.sleep(this.delay);
             }catch(InterruptedException e){
                 System.out.println(e);
             }
@@ -66,22 +69,28 @@ public class SimulationEngine implements Runnable{
     }
 
     private void simulateGeneration(){
+        this.map.removeDead();
         this.map.moveElements();
+        // TODO jedzenie
+        this.map.reproduction();
+        // TODO dodanie nowych roślin
+        System.out.println(this.map);
     }
 
     public void stop() {
         this.running = false;
-        resume();
-    }
-
-    public void pause() {
         this.paused = true;
+        toggle();
     }
 
-    public void resume() {
-        synchronized (pauseLock) {
-            paused = false;
-            pauseLock.notifyAll();
+    public void toggle() {
+        if(!this.paused){
+            this.paused = true;
+        } else {
+            synchronized (this.pauseLock) {
+                this.paused = false;
+                this.pauseLock.notifyAll();
+            }
         }
     }
 }
