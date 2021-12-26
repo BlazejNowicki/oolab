@@ -55,4 +55,18 @@ public class Direction {
     public String toString() {
         return Integer.toString(this.direction);
     }
+
+    public String sourcePath(){
+        return switch (direction){
+            case 1 -> "src/main/resources/1.png";
+            case 0 -> "src/main/resources/0.png";
+            case 2 -> "src/main/resources/2.png";
+            case 3 -> "src/main/resources/3.png";
+            case 4 -> "src/main/resources/4.png";
+            case 5 -> "src/main/resources/5.png";
+            case 6 -> "src/main/resources/6.png";
+            case 7 -> "src/main/resources/7.png";
+            default -> "";
+        };
+    }
 }

@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import org.w3c.dom.Text;
 
 public class ConfigurationForm extends GridPane {
     public ConfigurationForm(App parent_app){
@@ -54,17 +53,23 @@ public class ConfigurationForm extends GridPane {
         TextField move_energy_input = new TextField("5");
         this.add(move_energy_input, 1, 6);
 
+        Label number_of_animals_label = new Label("Initial number of animals:");
+        this.add(number_of_animals_label, 0,7);
+
+        TextField number_of_animals_input = new TextField("10");
+        this.add(number_of_animals_input, 1, 7);
+
         Label delay_label = new Label("Delay: [ms]");
-        this.add(delay_label, 0, 7);
+        this.add(delay_label, 0, 8);
 
         TextField delay_input = new TextField("500");
-        this.add(delay_input, 1, 7);
+        this.add(delay_input, 1, 8);
 
         Button btn = new Button("Go");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        this.add(hbBtn, 1, 8);
+        this.add(hbBtn, 1, 9);
 
         btn.setOnAction(m -> {
             try{
@@ -75,7 +80,8 @@ public class ConfigurationForm extends GridPane {
                 int plant_energy = Integer.parseInt(plant_energy_input.getText());
                 int delay = Integer.parseInt(delay_input.getText());
                 int move_energy = Integer.parseInt(move_energy_input.getText());
-                parent_app.renderMainStage(new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, delay));
+                int number_of_animals = Integer.parseInt(number_of_animals_input.getText());
+                parent_app.renderMainStage(new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, number_of_animals, Math.max(50,delay)));
             } catch(NumberFormatException e){
                 System.out.println(e);
             }

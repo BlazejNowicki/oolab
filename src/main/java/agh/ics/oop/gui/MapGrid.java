@@ -71,6 +71,7 @@ public class MapGrid extends GridPane {
                     pane.setStyle("-fx-background-color: #af9c6a; -fx-border-color: gray");
                 }
                 StackPane.setAlignment(pane, Pos.CENTER);
+                pane.setOnMouseClicked(e -> System.out.println("Animal clicked" + position));
                 this.add(pane, x-lower.x+1, upper.y+1-y);
             }
         }

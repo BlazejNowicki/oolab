@@ -5,8 +5,6 @@ public class UnboundedMap extends AbstractMap implements IMap{
         super(conf);
         this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
         this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
-        this.place(new Plant(new Vector2d(2,2), this, conf.plant_energy));
-        this.place(new Plant(new Vector2d(3,4), this, conf.plant_energy));
     }
 
     @Override

@@ -35,9 +35,13 @@ public class Animal extends AbstractMapElement implements IMapElement{
         this.energy = this.energy - delta;
     }
 
+    public void increaseEnergy(int delta){
+        this.energy += delta;
+    }
+
     @Override
     public String getImagePath() {
-        return "src/main/resources/grass.png";
+        return direction.sourcePath();
     }
 
     public Genome getGenome() {

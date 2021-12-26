@@ -1,26 +1,29 @@
 package agh.ics.oop;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractMap implements IMap{
     protected final Vector2d lowerBound;
     protected final Vector2d upperBound;
     protected Map<Vector2d, LinkedList<Animal>> animals;
-    protected final Map<Vector2d, LinkedList<Plant>> plants;
+    protected final Map<Vector2d, Plant> plants;
     protected final int width;
     protected final int height;
     protected Vector2d jungle_lower;
     protected Vector2d jungle_upper;
+    protected Random rand;
+    protected final int plant_energy;
 
     public AbstractMap(MapConfiguration conf){
+        // TODO !!! teraz dodać generownie zwierząt na losowych miejscach na początku wymulacji (ich liczba jako parametr)
         this.width = conf.width;
         this.height = conf.height;
         this.lowerBound = new Vector2d(0,0);
         this.upperBound = new Vector2d(width-1, height-1);
         this.animals = new HashMap<>();
         this.plants = new HashMap<>();
+        this.rand = new Random();
+        this.plant_energy = conf.plant_energy;
 
         // TODO Czy to ma wgl sensowne rozwiązanie? VVV
         int jungle_width = 2 * (int) Math.round((double)(conf.width-1)*conf.jungle_ratio/2);
@@ -32,6 +35,14 @@ public abstract class AbstractMap implements IMap{
         this.jungle_lower = new Vector2d((conf.width-jungle_width) / 2 , (conf.height - jungle_height) / 2);
         this.jungle_upper = new Vector2d((conf.width-jungle_width) / 2 + jungle_width,
                 (conf.height - jungle_height) / 2 + jungle_height);
+
+        for (int i=0; i<conf.number_of_animals; i++){
+            Vector2d position = new Vector2d(
+                    lowerBound.x + rand.nextInt(conf.width),
+                    lowerBound.y + rand.nextInt(conf.height)
+            );
+            this.place(new Animal(position, this, conf.initial_energy));
+        }
     }
 
     public boolean isJungle(Vector2d position){
@@ -42,12 +53,49 @@ public abstract class AbstractMap implements IMap{
 
     @Override
     public void spawnPlants() {
-        // TODO impleent
+        LinkedList<Vector2d> spots_jungle = new LinkedList<>();
+        LinkedList<Vector2d> spots_outside = new LinkedList<>();
+        for(int x=this.lowerBound.x; x <= this.upperBound.x; x++) {
+            for (int y = lowerBound.y; y <= this.upperBound.y; y++) {
+                Vector2d position = new Vector2d(x,y);
+                if (!this.isOccupied(position)){
+                    if(this.isJungle(position)){
+                        spots_jungle.add(position);
+                    } else {
+                        spots_outside.add(position);
+                    }
+                }
+            }
+        }
+        if (spots_jungle.size() > 0){
+            Vector2d empty_spot = spots_jungle.get(rand.nextInt(spots_jungle.size()));
+            this.place(new Plant(empty_spot, this, this.plant_energy));
+        }
+
+        if (spots_outside.size() > 0){
+            Vector2d empty_spot = spots_outside.get(rand.nextInt(spots_outside.size()));
+            this.place(new Plant(empty_spot, this, this.plant_energy));
+        }
     }
 
     @Override
     public void eatPlants() {
-        // TODO implement
+        for(int x=this.lowerBound.x; x <= this.upperBound.x; x++) {
+            for (int y = lowerBound.y; y <= this.upperBound.y; y++) {
+                Vector2d position = new Vector2d(x, y);
+                if (this.animals.containsKey(position) && this.animals.get(position).size() > 0 && this.plants.containsKey(position)) {
+                    LinkedList<Animal> list = new LinkedList<>(this.animals.get(position));
+                    list.sort((a,b) -> a.getEnergy() - b.getEnergy()); // TODO to sortownie można jeszcze przemyśleć
+                    int top_energy = list.get(0).getEnergy();
+                    list.removeIf(e -> e.getEnergy() < top_energy);
+                    Plant plant = this.plants.get(position);
+                    for(Animal animal: list){
+                        animal.increaseEnergy((int) Math.round((double)plant.getEnergy() / list.size()));
+                    }
+                    this.plants.remove(position);
+                }
+            }
+        }
     }
 
     @Override
@@ -115,10 +163,7 @@ public abstract class AbstractMap implements IMap{
             }
             animals.get(position).push((Animal)new_element);
         } else if (new_element instanceof Plant){
-            if (! plants.containsKey(position)) {
-                plants.put(position, new LinkedList<>());
-            }
-            plants.get(position).push((Plant) new_element);
+            plants.put(position, (Plant) new_element);
         }
     }
 
@@ -130,9 +175,7 @@ public abstract class AbstractMap implements IMap{
                 return animals.get(position).getFirst();
             }
         } else if( plants.get(position) != null){
-            if (plants.get(position).size() > 0){
-                return plants.get(position).getFirst();
-            }
+            return plants.get(position);
         }
         return null;
     }
@@ -141,7 +184,7 @@ public abstract class AbstractMap implements IMap{
     public boolean isOccupied(Vector2d position){
         if (animals.containsKey(position) && animals.get(position).size() > 0){
             return true;
-        } else return plants.containsKey(position) && plants.get(position).size() > 0;
+        } else return plants.containsKey(position);
     }
 
     @Override

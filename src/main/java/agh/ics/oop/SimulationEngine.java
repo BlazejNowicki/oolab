@@ -71,9 +71,9 @@ public class SimulationEngine implements Runnable{
     private void simulateGeneration(){
         this.map.removeDead();
         this.map.moveElements();
-        // TODO jedzenie
+        this.map.eatPlants();
         this.map.reproduction();
-        // TODO dodanie nowych roślin
+        this.map.spawnPlants();
         System.out.println(this.map);
     }
 
