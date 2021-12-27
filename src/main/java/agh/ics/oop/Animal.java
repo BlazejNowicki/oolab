@@ -6,6 +6,8 @@ public class Animal extends AbstractMapElement implements IMapElement{
     Random rand = new Random();
     private final Direction direction;
     private final Genome genome;
+    private int number_of_children = 0;
+    private int age = 0;
 
 
     public Animal(Vector2d position, IMap map, int energy) {
@@ -28,6 +30,7 @@ public class Animal extends AbstractMapElement implements IMapElement{
         } else {
             System.out.println("Cant move there");
         }
+        this.age += 1;
         return this.position;
     }
 
@@ -46,6 +49,18 @@ public class Animal extends AbstractMapElement implements IMapElement{
 
     public Genome getGenome() {
         return genome;
+    }
+
+    public void gotChild(){
+        this.number_of_children += 1;
+    }
+
+    public int getNumberOfChildren(){
+        return this.number_of_children;
+    }
+
+    public int getAge(){
+        return this.age;
     }
 
     @Override

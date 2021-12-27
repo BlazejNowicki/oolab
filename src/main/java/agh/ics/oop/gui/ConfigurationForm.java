@@ -38,19 +38,19 @@ public class ConfigurationForm extends GridPane {
         Label initial_energy_label = new Label("Initial animals' energy:");
         this.add(initial_energy_label, 0, 4);
 
-        TextField initial_energy_input = new TextField("10");
+        TextField initial_energy_input = new TextField("50");
         this.add(initial_energy_input, 1, 4);
 
         Label plant_energy_label = new Label("Plant energy:");
         this.add(plant_energy_label, 0, 5);
 
-        TextField plant_energy_input = new TextField("5");
+        TextField plant_energy_input = new TextField("30");
         this.add(plant_energy_input, 1, 5);
 
         Label move_energy_label = new Label("Move energy:");
         this.add(move_energy_label, 0, 6);
 
-        TextField move_energy_input = new TextField("5");
+        TextField move_energy_input = new TextField("2");
         this.add(move_energy_input, 1, 6);
 
         Label number_of_animals_label = new Label("Initial number of animals:");
@@ -81,7 +81,7 @@ public class ConfigurationForm extends GridPane {
                 int delay = Integer.parseInt(delay_input.getText());
                 int move_energy = Integer.parseInt(move_energy_input.getText());
                 int number_of_animals = Integer.parseInt(number_of_animals_input.getText());
-                parent_app.renderMainStage(new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, number_of_animals, Math.max(50,delay)));
+                parent_app.renderMainStage(new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, number_of_animals, Math.max(30,delay)));
             } catch(NumberFormatException e){
                 System.out.println(e);
             }

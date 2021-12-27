@@ -3,8 +3,6 @@ package agh.ics.oop;
 public class UnboundedMap extends AbstractMap implements IMap{
     public UnboundedMap(MapConfiguration conf){
         super(conf);
-        this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
-        this.place(new Animal(new Vector2d(0,0), this, conf.initial_energy));
     }
 
     @Override

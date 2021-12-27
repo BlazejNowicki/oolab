@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Genome {
+public class Genome implements Comparable{
     private final int[] genes = new int[32];
     private Random rand = new Random();
 
@@ -45,5 +45,18 @@ public class Genome {
             result.append(v);
         }
         return result.toString();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Genome other = (Genome) o;
+        int[] genome = this.getGenes();
+        int[] other_genome = other.getGenes();
+        for(int i=0; i<32; i++){
+            if ( genome[i] != other_genome[i]){
+                return genome[i] - other_genome[i];
+            }
+        }
+        return 0;
     }
 }

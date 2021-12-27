@@ -59,7 +59,7 @@ public class SimulationEngine implements Runnable{
             System.out.println("Start of generation");
             this.simulateGeneration();
             System.out.println("End of generation\n");
-            Platform.runLater(this::mapChanged); // TODO Zastanowić się: Czy runLater ma być w tym miejscu?
+            this.mapChanged();
             try{
                 Thread.sleep(this.delay);
             }catch(InterruptedException e){

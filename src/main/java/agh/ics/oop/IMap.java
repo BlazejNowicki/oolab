@@ -18,4 +18,6 @@ public interface IMap {
     void removeDead();
     void spawnPlants();
     void eatPlants();
+
+    Statistics getStatistics();
 }

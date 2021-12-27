@@ -51,13 +51,13 @@ public class App extends Application{
 
     public void runSimulation(MapConfiguration conf){
         try {
-            this.engineL = new SimulationEngine(new UnboundedMap(conf), conf.delay);
+            this.engineL = new SimulationEngine(new UnboundedMap(conf), conf.delay());
             this.engineL.addObserver(this.left_side);
             this.left_side.setEngine(this.engineL);
             Thread threadL = new Thread(this.engineL);
             threadL.start();
 
-            this.engineR = new SimulationEngine(new BoundedMap(conf), conf.delay);
+            this.engineR = new SimulationEngine(new BoundedMap(conf), conf.delay());
             this.engineR.addObserver(this.right_side);
             this.right_side.setEngine(this.engineR);
             Thread threadR = new Thread(this.engineR);
