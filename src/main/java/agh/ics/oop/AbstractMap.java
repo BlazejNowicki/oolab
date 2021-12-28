@@ -17,6 +17,7 @@ public abstract class AbstractMap implements IMap{
     protected int date;
     protected Genome dominant;
     protected final MapConfiguration conf;
+    protected int magic_count;
 
     public AbstractMap(MapConfiguration conf){
         this.conf = conf;
@@ -179,6 +180,33 @@ public abstract class AbstractMap implements IMap{
         }
     }
 
+    @Override
+    public void doMagic(){
+        if (this.countAnimals() == 5 && magic_count <= 3){
+            System.out.println("Magic!!");
+            LinkedList<Animal> new_animals = new LinkedList<>();
+            for(int x=this.lowerBound.x; x <= this.upperBound.x; x++) {
+                for (int y = lowerBound.y; y <= this.upperBound.y; y++) {
+                    Vector2d position = new Vector2d(x, y);
+                    if (this.animals.containsKey(position)) {
+                        for (Animal animal : this.animals.get(position)) {
+                            Vector2d new_position = new Vector2d(
+                                    lowerBound.x + rand.nextInt(conf.width()),
+                                    lowerBound.y + rand.nextInt(conf.height())
+                            );
+                            new_animals.add(new Animal(animal.getGenome(), new_position, this, conf.initial_energy()));
+                        }
+
+                    }
+                }
+            }
+            for(Animal animal: new_animals){
+                this.place(animal);
+            }
+            magic_count += 1;
+        }
+    }
+
     private void add_genome(Genome genome){
         if(!genome_tracker.containsKey(genome)){
             this.genome_tracker.put(genome, 0);
@@ -277,6 +305,19 @@ public abstract class AbstractMap implements IMap{
             );
     }
 
+    private int countAnimals(){
+        int count = 0;
+        for(int x=this.lowerBound.x; x <= this.upperBound.x; x++) {
+            for (int y = lowerBound.y; y <= this.upperBound.y; y++) {
+                Vector2d position = new Vector2d(x,y);
+                if (this.animals.containsKey(position)){
+                    count += this.animals.get(position).size();
+                }
+            }
+        }
+        return count;
+    }
+
     public boolean containsDominant(Vector2d position){
         if(!animals.containsKey(position)) return false;
         for(Animal animal: animals.get(position)){
@@ -290,6 +331,11 @@ public abstract class AbstractMap implements IMap{
     @Override
     public int getDate() {
         return date;
+    }
+
+    @Override
+    public int magicCount(){
+        return this.magic_count;
     }
 
     @Override

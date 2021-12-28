@@ -10,12 +10,14 @@ public class SimulationEngine implements Runnable{
     private final LinkedList<IMapChangeObserver> observers;
     private final int delay;
     private final String output_path;
+    private final boolean magic;
 
-    public SimulationEngine(IMap map, int delay, String output_path){
+    public SimulationEngine(IMap map, int delay, String output_path, boolean magic){
         this.map = map;
         this.observers = new LinkedList<>();
         this.delay = delay;
         this.output_path = output_path;
+        this.magic = magic;
     }
 
     public IMap getMap() {
@@ -56,9 +58,7 @@ public class SimulationEngine implements Runnable{
                     }
                 }
             }
-            System.out.println("Start of generation");
             this.simulateGeneration();
-            System.out.println("End of generation\n");
             this.mapChanged();
             try{
                 Thread.sleep(this.delay);
@@ -69,6 +69,7 @@ public class SimulationEngine implements Runnable{
     }
 
     private void simulateGeneration(){
+        if(this.magic) this.map.doMagic();
         this.map.removeDead();
         this.map.moveElements();
         this.map.eatPlants();
@@ -96,5 +97,8 @@ public class SimulationEngine implements Runnable{
 
     public String getOutputPath(){
         return this.output_path;
+    }
+    public boolean isMagical(){
+        return this.magic;
     }
 }

@@ -4,6 +4,7 @@ import agh.ics.oop.MapConfiguration;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -65,11 +66,16 @@ public class ConfigurationForm extends GridPane {
         TextField delay_input = new TextField("500");
         this.add(delay_input, 1, 8);
 
+        CheckBox magic_left = new CheckBox("Magic unbounded map");
+        CheckBox magic_right = new CheckBox("Magic bounded map");
+        this.add(magic_left, 0, 9);
+        this.add(magic_right, 0, 10);
+
         Button btn = new Button("Go");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        this.add(hbBtn, 1, 9);
+        this.add(hbBtn, 1, 11);
 
         btn.setOnAction(m -> {
             try{
@@ -81,7 +87,10 @@ public class ConfigurationForm extends GridPane {
                 int delay = Integer.parseInt(delay_input.getText());
                 int move_energy = Integer.parseInt(move_energy_input.getText());
                 int number_of_animals = Integer.parseInt(number_of_animals_input.getText());
-                parent_app.renderMainStage(new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, number_of_animals, Math.max(30,delay)));
+                parent_app.renderMainStage(
+                        new MapConfiguration(width, height, jungle_ratio, initial_energy, plant_energy, move_energy, number_of_animals, Math.max(30,delay)),
+                        magic_left.isSelected(),
+                        magic_right.isSelected());
             } catch(NumberFormatException e){
                 System.out.println(e);
             }

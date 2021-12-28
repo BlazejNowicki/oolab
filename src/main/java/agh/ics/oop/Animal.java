@@ -22,6 +22,12 @@ public class Animal extends AbstractMapElement implements IMapElement{
         this.genome = new Genome(animalA, animalB);
     }
 
+    public Animal(Genome genome, Vector2d position, IMap map, int energy){
+        super(position, map, energy);
+        this.direction = new Direction();
+        this.genome = genome;
+    }
+
     public Vector2d makeMove(){
         Vector2d move = this.direction.turn(this.genome);
         Vector2d new_position = this.position.add(move);

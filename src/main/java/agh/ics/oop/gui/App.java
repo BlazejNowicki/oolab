@@ -33,7 +33,7 @@ public class App extends Application{
     }
 
 
-    public void renderMainStage(MapConfiguration conf){
+    public void renderMainStage(MapConfiguration conf, boolean magic_left, boolean magic_right){
         HBox container = new HBox();
         container.setAlignment(Pos.CENTER);
 
@@ -45,19 +45,19 @@ public class App extends Application{
 
         Scene main_scene = new Scene(container);
         primaryStage.setScene(main_scene);
-        runSimulation(conf);
+        runSimulation(conf, magic_left, magic_right);
     }
 
 
-    public void runSimulation(MapConfiguration conf){
+    public void runSimulation(MapConfiguration conf, boolean magic_left, boolean magic_right){
         try {
-            this.engineL = new SimulationEngine(new UnboundedMap(conf), conf.delay(), "stat_map_L.csv");
+            this.engineL = new SimulationEngine(new UnboundedMap(conf), conf.delay(), "stat_map_L.csv", magic_left);
             this.engineL.addObserver(this.left_side);
             this.left_side.setEngine(this.engineL);
             Thread threadL = new Thread(this.engineL);
             threadL.start();
 
-            this.engineR = new SimulationEngine(new BoundedMap(conf), conf.delay(), "stat_map_R.csv");
+            this.engineR = new SimulationEngine(new BoundedMap(conf), conf.delay(), "stat_map_R.csv", magic_right);
             this.engineR.addObserver(this.right_side);
             this.right_side.setEngine(this.engineR);
             Thread threadR = new Thread(this.engineR);

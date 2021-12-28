@@ -5,6 +5,7 @@ import agh.ics.oop.SimulationEngine;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -12,6 +13,7 @@ public class MapBox extends HBox implements IMapChangeObserver {
     private final MapGrid grid = new MapGrid(this);
     private final StatisticsBox stat_box= new StatisticsBox();
     private final TrackerBox tracker_box = new TrackerBox();
+    private final Label magic_counter = new Label();
     private SimulationEngine engine;
     private boolean show_dominant = false;
 
@@ -34,7 +36,7 @@ public class MapBox extends HBox implements IMapChangeObserver {
         map_button.getChildren().add(this.tracker_box);
         this.getChildren().add(map_button);
 
-
+        map_button.getChildren().add(magic_counter);
 
         start_stop.setOnAction( e -> {
             this.engine.toggle();
@@ -72,11 +74,21 @@ public class MapBox extends HBox implements IMapChangeObserver {
             this.grid.render(this.engine, this.show_dominant);
             this.stat_box.update(this.engine);
             this.tracker_box.update(this.engine);
+
+            if (engine.isMagical()){
+                this.magic_counter.setText("Magic happened " + this.engine.getMap().magicCount() +"times.");
+            }
         });
     }
 
     public void showGrid(){
         this.grid.render(this.engine, this.show_dominant);
         this.stat_box.update(this.engine);
+
+        if (engine.isMagical()){
+            this.magic_counter.setText("Magic happened 0 times.");
+        } else {
+            this.magic_counter.setText("This simulation is not magical");
+        }
     }
 }

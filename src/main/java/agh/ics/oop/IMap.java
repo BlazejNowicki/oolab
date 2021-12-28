@@ -18,11 +18,13 @@ public interface IMap {
     void removeDead();
     void spawnPlants();
     void eatPlants();
+    void doMagic();
     void startTracking(Object obj);
     Tracker getTracker();
     boolean containsDominant(Vector2d position);
     MapConfiguration getConfiguration();
 
+    int magicCount();
     int getDate();
     Statistics getStatistics();
 }

@@ -180,7 +180,6 @@ public class StatisticsBox extends VBox {
         this.animal_series.getData().add(new XYChart.Data(day, stat.animals()));
         this.plant_series.getData().add(new XYChart.Data(day, stat.plants()));
         if (!Double.isNaN(stat.avg_lifespan())) {
-            System.out.println(stat.avg_lifespan());
             this.lifespan_series.getData().add(new XYChart.Data(day, stat.avg_lifespan()));
         }
         this.energy_series.getData().add(new XYChart.Data(day, stat.avg_energy()));
