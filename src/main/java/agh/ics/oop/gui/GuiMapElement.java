@@ -10,15 +10,24 @@ import javafx.scene.layout.VBox;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Map;
 
-    public class GuiMapElement extends VBox {
-        public GuiMapElement(IMapElement object){
+public class GuiMapElement extends VBox {
+        public GuiMapElement(IMapElement object, Map<String, Image> cache){
             super();
             try{
-                Image image = new Image(new FileInputStream(object.getImagePath()));
+                String path = object.getImagePath();
+                Image image;
+                if (cache.containsKey(path)){
+                    image = cache.get(path);
+                } else {
+                    image = new Image(new FileInputStream(path));
+                    cache.put(path, image);
+                }
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(20);
-                imageView.setFitHeight(20);
+                imageView.setFitWidth(25);
+                imageView.setFitHeight(25);
+
                 this.getChildren().add(imageView);
                 this.setAlignment(Pos.CENTER);
                 GridPane.setHalignment(this, HPos.CENTER);

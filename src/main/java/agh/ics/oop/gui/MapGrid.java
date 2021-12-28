@@ -8,10 +8,15 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapGrid extends GridPane {
-    private MapBox parent;
+    private final MapBox parent;
+    private final Map<String, Image> cache = new HashMap<>();
 
     public MapGrid(MapBox parent){
         super();
@@ -35,10 +40,10 @@ public class MapGrid extends GridPane {
 
         // columns and rows settings
         for (int i=0; lower.x + i <= upper.x+1; i++){
-            this.getColumnConstraints().add(new ColumnConstraints(50));
+            this.getColumnConstraints().add(new ColumnConstraints(30));
         }
         for (int i=0; lower.y + i <= upper.y+1; i++){
-            this.getRowConstraints().add(new RowConstraints(50));
+            this.getRowConstraints().add(new RowConstraints(30));
         }
 
         // axis description
@@ -66,7 +71,7 @@ public class MapGrid extends GridPane {
                 if (map.isOccupied(position)){
                     Object obj = map.objectAt(new Vector2d(x,y));
                     if (obj != null){
-                        GuiMapElement item = new GuiMapElement((AbstractMapElement) obj);
+                        GuiMapElement item = new GuiMapElement((AbstractMapElement) obj, cache);
                         pane.getChildren().add(item);
                     }
                 }

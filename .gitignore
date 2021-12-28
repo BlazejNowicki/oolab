@@ -29,3 +29,6 @@ dependency-reduced-pom.xml
 *.idea
 
 README.html
+
+stat_map_L.csv
+stat_map_R.csv

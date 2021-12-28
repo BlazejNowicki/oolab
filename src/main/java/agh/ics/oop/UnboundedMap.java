@@ -12,11 +12,11 @@ public class UnboundedMap extends AbstractMap implements IMap{
 
     @Override
     public Vector2d newPosition(Vector2d position) {
-        int x = position.x % this.width;
-        int y = position.y % this.height;
+        int x = position.x % this.conf.width();
+        int y = position.y % this.conf.height();
 
-        if (x < 0) x += this.width;
-        if (y < 0) y += this.height;
+        if (x < 0) x += this.conf.width();
+        if (y < 0) y += this.conf.height();
 
         return new Vector2d(x, y);
     }

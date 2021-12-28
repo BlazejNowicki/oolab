@@ -9,9 +9,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MapBox extends HBox implements IMapChangeObserver {
-    private MapGrid grid = new MapGrid(this);
-    private StatisticsBox stat_box= new StatisticsBox();
-    private TrackerBox tracker_box = new TrackerBox();
+    private final MapGrid grid = new MapGrid(this);
+    private final StatisticsBox stat_box= new StatisticsBox();
+    private final TrackerBox tracker_box = new TrackerBox();
     private SimulationEngine engine;
     private boolean show_dominant = false;
 
@@ -22,8 +22,10 @@ public class MapBox extends HBox implements IMapChangeObserver {
         HBox input_section = new HBox();
         Button start_stop = new Button("Start");
         Button show_dominant_genome = new Button("Show dominant genome");
+        Button save_button = new Button("Save history to csv file");
         input_section.getChildren().add(start_stop);
         input_section.getChildren().add(show_dominant_genome);
+        input_section.getChildren().add(save_button);
         input_section.setPadding(new Insets(10, 10, 10, 10));
 
         VBox map_button = new VBox();
@@ -31,6 +33,8 @@ public class MapBox extends HBox implements IMapChangeObserver {
         map_button.getChildren().add(input_section);
         map_button.getChildren().add(this.tracker_box);
         this.getChildren().add(map_button);
+
+
 
         start_stop.setOnAction( e -> {
             this.engine.toggle();
@@ -49,6 +53,12 @@ public class MapBox extends HBox implements IMapChangeObserver {
                 show_dominant_genome.setText("Show dominant genome");
             }
             mapChanged();
+        });
+
+        save_button.setOnAction(e -> {
+            if(this.engine.isPaused()){
+                this.stat_box.saveToFile(this.engine.getOutputPath());
+            }
         });
     }
 

@@ -9,11 +9,13 @@ public class SimulationEngine implements Runnable{
     private final Object pauseLock = new Object();
     private final LinkedList<IMapChangeObserver> observers;
     private final int delay;
+    private final String output_path;
 
-    public SimulationEngine(IMap map, int delay){
+    public SimulationEngine(IMap map, int delay, String output_path){
         this.map = map;
         this.observers = new LinkedList<>();
         this.delay = delay;
+        this.output_path = output_path;
     }
 
     public IMap getMap() {
@@ -90,5 +92,9 @@ public class SimulationEngine implements Runnable{
                 this.pauseLock.notifyAll();
             }
         }
+    }
+
+    public String getOutputPath(){
+        return this.output_path;
     }
 }

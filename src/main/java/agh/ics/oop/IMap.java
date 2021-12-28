@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import java.lang.module.Configuration;
-
 public interface IMap {
     Vector2d getLowerBound();
     Vector2d getUpperBound();

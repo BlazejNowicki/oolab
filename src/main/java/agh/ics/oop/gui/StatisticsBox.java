@@ -2,6 +2,7 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.IMap;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.StatHistory;
 import agh.ics.oop.Statistics;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,6 +25,9 @@ public class StatisticsBox extends VBox {
     private final XYChart.Series lifespan_series = new XYChart.Series();
     private final XYChart.Series energy_series = new XYChart.Series();
     private final XYChart.Series child_series = new XYChart.Series();
+
+    private final StatHistory history = new StatHistory();
+
 
     public StatisticsBox(){
         super();
@@ -181,5 +185,18 @@ public class StatisticsBox extends VBox {
         }
         this.energy_series.getData().add(new XYChart.Data(day, stat.avg_energy()));
         this.child_series.getData().add(new XYChart.Data(day, stat.avg_children()));
+
+        this.history.addRecord(
+                stat.animals(),
+                stat.plants(),
+                stat.avg_energy(),
+                stat.avg_lifespan(),
+                stat.avg_children()
+        );
     }
+
+    public void saveToFile(String path){
+        this.history.saveToFile(path);
+    }
+
 }

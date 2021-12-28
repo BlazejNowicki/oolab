@@ -51,7 +51,7 @@ public class Animal extends AbstractMapElement implements IMapElement{
         } else if(energy > initial_energy/2){
             energy_level = "mid/";
         } else {
-            energy_level = "low";
+            energy_level = "low/";
         }
         return "src/main/resources/" + energy_level + direction.sourcePath();
     }
@@ -76,7 +76,7 @@ public class Animal extends AbstractMapElement implements IMapElement{
     public String toString() {
         return "Animal {" +
                 " Pos: " + this.position.toString() +
-                " Eng: " + Integer.toString(this.energy) +
+                " Eng: " + this.energy +
                 " Dir: " + this.direction +
                 " Gen: " + this.genome.toString() +
                 "}\n";

@@ -1,39 +1,27 @@
 package agh.ics.oop;
 
-import java.lang.module.Configuration;
 import java.util.*;
 
 public abstract class AbstractMap implements IMap{
+    protected Map<Vector2d, LinkedList<Animal>> animals = new HashMap<>();
+    protected final Map<Vector2d, Plant> plants = new HashMap<>();
     protected final Vector2d lowerBound;
     protected final Vector2d upperBound;
-    protected Map<Vector2d, LinkedList<Animal>> animals;
-    protected final Map<Vector2d, Plant> plants;
-    protected final int width;
-    protected final int height;
     protected final Vector2d jungle_lower;
     protected final Vector2d jungle_upper;
-    protected final Random rand;
-    protected final int plant_energy;
-    protected final int move_energy;
+    protected final Random rand = new Random();
+    protected final Tracker tracker = new Tracker(this);
+    protected final Map<Genome, Integer> genome_tracker = new TreeMap<>();
     protected double avg_lifespan = 0;
     protected double number_of_dead = 0;
-    protected final Map<Genome, Integer> genome_tracker = new TreeMap<>();
     protected int date;
-    protected final Tracker tracker = new Tracker(this);
     protected Genome dominant;
     protected final MapConfiguration conf;
 
     public AbstractMap(MapConfiguration conf){
         this.conf = conf;
-        this.width = conf.width();
-        this.height = conf.height();
         this.lowerBound = new Vector2d(0,0);
-        this.upperBound = new Vector2d(width-1, height-1);
-        this.animals = new HashMap<>();
-        this.plants = new HashMap<>();
-        this.rand = new Random();
-        this.plant_energy = conf.plant_energy();
-        this.move_energy = conf.move_energy();
+        this.upperBound = new Vector2d(conf.width()-1, conf.height()-1);
 
         int jungle_width = 2 * (int) Math.round((double)(conf.width()-1)*conf.jungle_ratio()/2);
         if(conf.width() % 2 == 0) jungle_width += 1;
@@ -78,12 +66,12 @@ public abstract class AbstractMap implements IMap{
         }
         if (spots_jungle.size() > 0){
             Vector2d empty_spot = spots_jungle.get(rand.nextInt(spots_jungle.size()));
-            this.place(new Plant(empty_spot, this, this.plant_energy));
+            this.place(new Plant(empty_spot, this, this.conf.plant_energy()));
         }
 
         if (spots_outside.size() > 0){
             Vector2d empty_spot = spots_outside.get(rand.nextInt(spots_outside.size()));
-            this.place(new Plant(empty_spot, this, this.plant_energy));
+            this.place(new Plant(empty_spot, this, this.conf.plant_energy()));
         }
     }
 
@@ -123,7 +111,7 @@ public abstract class AbstractMap implements IMap{
                             moved_animals.put(new_position, new LinkedList<>());
                         }
                         moved_animals.get(new_position).push(animal);
-                        animal.decreaseEnergy(this.move_energy);
+                        animal.decreaseEnergy(this.conf.move_energy());
                     }
                 }
             }
@@ -278,6 +266,7 @@ public abstract class AbstractMap implements IMap{
         if (!genome_tracker.isEmpty())
             this.dominant = maxEntry.getKey();
 
+        assert maxEntry != null;
         return new Statistics(
                 animal_count,
                 this.plants.size(),
