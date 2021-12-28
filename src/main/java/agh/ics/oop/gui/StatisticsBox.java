@@ -24,12 +24,10 @@ public class StatisticsBox extends VBox {
     private final XYChart.Series lifespan_series = new XYChart.Series();
     private final XYChart.Series energy_series = new XYChart.Series();
     private final XYChart.Series child_series = new XYChart.Series();
-    private int day = 0;
 
     public StatisticsBox(){
         super();
         this.setPadding(new Insets(10, 10, 10, 10));
-        this.setAlignment(Pos.CENTER);
 
 
         GridPane grid = new GridPane();
@@ -85,6 +83,7 @@ public class StatisticsBox extends VBox {
 //        lifespan_series.setName("Average lifespan");
         yAxis.setLabel("Avg lifespan");
 
+        lifespan_series.setName("Average lifespan");
         chart.getData().add(lifespan_series);
 
         chart.setMaxWidth(350);
@@ -165,7 +164,7 @@ public class StatisticsBox extends VBox {
     public void update(SimulationEngine engine){
         IMap map = engine.getMap();
         Statistics stat = map.getStatistics();
-
+        int day = map.getDate();
         this.animal_counter.setText(Integer.toString(stat.animals()));
         this.plant_counter.setText(Integer.toString(stat.plants()));
 
@@ -182,6 +181,5 @@ public class StatisticsBox extends VBox {
         }
         this.energy_series.getData().add(new XYChart.Data(day, stat.avg_energy()));
         this.child_series.getData().add(new XYChart.Data(day, stat.avg_children()));
-        this.day += 1;
     }
 }

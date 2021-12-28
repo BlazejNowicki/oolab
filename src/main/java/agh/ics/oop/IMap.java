@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import java.lang.module.Configuration;
+
 public interface IMap {
     Vector2d getLowerBound();
     Vector2d getUpperBound();
@@ -18,6 +20,11 @@ public interface IMap {
     void removeDead();
     void spawnPlants();
     void eatPlants();
+    void startTracking(Object obj);
+    Tracker getTracker();
+    boolean containsDominant(Vector2d position);
+    MapConfiguration getConfiguration();
 
+    int getDate();
     Statistics getStatistics();
 }

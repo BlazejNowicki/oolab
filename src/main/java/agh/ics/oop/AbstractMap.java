@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import java.lang.module.Configuration;
 import java.util.*;
 
 public abstract class AbstractMap implements IMap{
@@ -9,16 +10,21 @@ public abstract class AbstractMap implements IMap{
     protected final Map<Vector2d, Plant> plants;
     protected final int width;
     protected final int height;
-    protected Vector2d jungle_lower;
-    protected Vector2d jungle_upper;
-    protected Random rand;
+    protected final Vector2d jungle_lower;
+    protected final Vector2d jungle_upper;
+    protected final Random rand;
     protected final int plant_energy;
     protected final int move_energy;
     protected double avg_lifespan = 0;
     protected double number_of_dead = 0;
     protected final Map<Genome, Integer> genome_tracker = new TreeMap<>();
+    protected int date;
+    protected final Tracker tracker = new Tracker(this);
+    protected Genome dominant;
+    protected final MapConfiguration conf;
 
     public AbstractMap(MapConfiguration conf){
+        this.conf = conf;
         this.width = conf.width();
         this.height = conf.height();
         this.lowerBound = new Vector2d(0,0);
@@ -29,7 +35,6 @@ public abstract class AbstractMap implements IMap{
         this.plant_energy = conf.plant_energy();
         this.move_energy = conf.move_energy();
 
-        // TODO Czy to ma wgl sensowne rozwiązanie? VVV
         int jungle_width = 2 * (int) Math.round((double)(conf.width()-1)*conf.jungle_ratio()/2);
         if(conf.width() % 2 == 0) jungle_width += 1;
 
@@ -104,6 +109,8 @@ public abstract class AbstractMap implements IMap{
 
     @Override
     public void moveElements() {
+        this.date += 1;
+
         Map<Vector2d, LinkedList<Animal>> moved_animals = new HashMap<>();
 
         for(int x=this.lowerBound.x; x <= this.upperBound.x; x++){
@@ -134,7 +141,7 @@ public abstract class AbstractMap implements IMap{
                     list.sort((a,b) -> b.getEnergy() - a.getEnergy());
                     Animal animalA = list.get(0);
                     Animal animalB = list.get(1);
-                    if ( animalA.getEnergy() > 4 && animalB.getEnergy() > 4){
+                    if ( animalA.getEnergy() >= conf.initial_energy()/2 && animalB.getEnergy() >= conf.initial_energy()){
                         int deltaA = (int) Math.round((double) animalA.getEnergy() / 4);
                         int deltaB = (int) Math.round((double) animalB.getEnergy() / 4);
                         animalA.decreaseEnergy(deltaA);
@@ -142,6 +149,7 @@ public abstract class AbstractMap implements IMap{
                         Animal new_animal = new Animal(animalA, animalB, position, this, deltaA + deltaB);
                         list.add(new_animal);
                         this.add_genome(new_animal.getGenome());
+                        this.tracker.wasBorn(animalA, animalB, new_animal);
                         animalA.gotChild();
                         animalB.gotChild();
                     }
@@ -161,6 +169,7 @@ public abstract class AbstractMap implements IMap{
                             this.avg_lifespan += animal.getAge();
                             this.remove_genome(animal.getGenome());
                             this.number_of_dead += 1;
+                            this.tracker.died(animal);
                         }
                     }
                     this.animals.get(position).removeIf(animal -> animal.getEnergy() <= 0);
@@ -177,7 +186,6 @@ public abstract class AbstractMap implements IMap{
             }
             animals.get(position).push((Animal)new_element);
             this.add_genome(((Animal) new_element).getGenome());
-
         } else if (new_element instanceof Plant){
             plants.put(position, (Plant) new_element);
         }
@@ -230,6 +238,18 @@ public abstract class AbstractMap implements IMap{
     }
 
     @Override
+    public void startTracking(Object obj){
+        if(obj instanceof Animal){
+            this.tracker.startTracking((Animal) obj);
+        }
+    }
+
+    @Override
+    public Tracker getTracker(){
+        return this.tracker;
+    }
+
+    @Override
     public Statistics getStatistics() {
         double energy_sum = 0;
         int animal_count = 0, number_of_children=0;
@@ -255,6 +275,8 @@ public abstract class AbstractMap implements IMap{
                 maxEntry = entry;
             }
         }
+        if (!genome_tracker.isEmpty())
+            this.dominant = maxEntry.getKey();
 
         return new Statistics(
                 animal_count,
@@ -264,6 +286,26 @@ public abstract class AbstractMap implements IMap{
                 (double) number_of_children / animal_count,
                 maxEntry.getKey()
             );
+    }
+
+    public boolean containsDominant(Vector2d position){
+        if(!animals.containsKey(position)) return false;
+        for(Animal animal: animals.get(position)){
+            if(animal.getGenome().equals(this.dominant)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getDate() {
+        return date;
+    }
+
+    @Override
+    public MapConfiguration getConfiguration(){
+        return this.conf;
     }
 
     @Override

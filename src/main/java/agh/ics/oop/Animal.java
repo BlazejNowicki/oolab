@@ -1,9 +1,9 @@
 package agh.ics.oop;
 
+import java.lang.module.Configuration;
 import java.util.Random;
 
 public class Animal extends AbstractMapElement implements IMapElement{
-    Random rand = new Random();
     private final Direction direction;
     private final Genome genome;
     private int number_of_children = 0;
@@ -44,7 +44,16 @@ public class Animal extends AbstractMapElement implements IMapElement{
 
     @Override
     public String getImagePath() {
-        return direction.sourcePath();
+        String energy_level;
+        int initial_energy = this.map.getConfiguration().initial_energy();
+        if (energy > initial_energy){
+            energy_level = "high/";
+        } else if(energy > initial_energy/2){
+            energy_level = "mid/";
+        } else {
+            energy_level = "low";
+        }
+        return "src/main/resources/" + energy_level + direction.sourcePath();
     }
 
     public Genome getGenome() {

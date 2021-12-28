@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import javafx.application.Platform;
-
 import java.util.LinkedList;
 
 public class SimulationEngine implements Runnable{

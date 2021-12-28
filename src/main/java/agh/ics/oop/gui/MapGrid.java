@@ -11,9 +11,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
 public class MapGrid extends GridPane {
-    // TODO pomyśleć o dodaniu jakis optyalizacji żeby nie ładować nowych zdjęć za każdym razem
+    private MapBox parent;
 
-    public void render(SimulationEngine engine){
+    public MapGrid(MapBox parent){
+        super();
+        this.parent = parent;
+    }
+
+    public void render(SimulationEngine engine, boolean show_dominant){
         IMap map = engine.getMap();
 
         this.setGridLinesVisible(false);
@@ -70,8 +75,16 @@ public class MapGrid extends GridPane {
                 } else {
                     pane.setStyle("-fx-background-color: #af9c6a; -fx-border-color: gray");
                 }
+
+                if (show_dominant && map.containsDominant(position)){
+                    pane.setStyle("-fx-border-color: red; -fx-border-width: 3");
+                }
+
                 StackPane.setAlignment(pane, Pos.CENTER);
-                pane.setOnMouseClicked(e -> System.out.println("Animal clicked" + position));
+                pane.setOnMouseClicked(e -> {
+                    map.startTracking(map.objectAt(position));
+                    parent.mapChanged();
+                });
                 this.add(pane, x-lower.x+1, upper.y+1-y);
             }
         }
