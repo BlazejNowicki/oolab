@@ -1,76 +1,84 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentMap;
+import java.lang.module.Configuration;
+import java.util.Random;
 
-public class Animal extends AbstractMapObject{
-    private MapDirection direction = MapDirection.NORTH;
-    private final IWorldMap map;
-    private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
+public class Animal extends AbstractMapElement implements IMapElement{
+    private final Direction direction;
+    private final Genome genome;
+    private int number_of_children = 0;
+    private int age = 0;
 
-    public Animal(IWorldMap map) {
-        this.position = new Vector2d(2, 2);
-        this.map = map;
+
+    public Animal(Vector2d position, IMap map, int energy) {
+        super(position, map, energy);
+        this.direction = new Direction();
+        this.genome = new Genome();
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition) {
-        this.position = new Vector2d(initialPosition.x, initialPosition.y);
-        this.map = map;
+    public Animal(Animal animalA, Animal animalB, Vector2d position, IMap map, int energy){
+        super(position, map, energy);
+        this.direction = new Direction();
+        this.genome = new Genome(animalA, animalB);
     }
 
-    protected MapDirection getDirection() {
-        return this.direction;
-    }
-
-    public void move(MoveDirection direction) {
-        Vector2d new_position = new Vector2d(this.position.x, this.position.y);
-        switch (direction) {
-            case LEFT -> this.direction = this.direction.previous();
-            case RIGHT -> this.direction = this.direction.next();
-            case FORWARD -> new_position = this.position.add(this.direction.toUnitVector());
-            case BACKWARD -> new_position = this.position.subtract(this.direction.toUnitVector());
+    public Vector2d makeMove(){
+        Vector2d move = this.direction.turn(this.genome);
+        Vector2d new_position = this.position.add(move);
+        if (this.map.canMoveTo(new_position)){
+            this.position = this.map.newPosition(new_position);
+        } else {
+            System.out.println("Cant move there");
         }
-        if(this.map == null || this.map.canMoveTo(new_position)) {
-            this.positionChanged(this.position, new_position);
-            this.position = new_position;
-        }
+        this.age += 1;
+        return this.position;
     }
 
-    public boolean isAt(Vector2d position) {
-        return this.position.equals(position);
+    public void decreaseEnergy(int delta){
+        this.energy = this.energy - delta;
     }
 
-    public String toString() {
-        return switch (this.direction) {
-            case NORTH -> "N";
-            case EAST -> "E";
-            case SOUTH -> "S";
-            case WEST -> "W";
-        };
+    public void increaseEnergy(int delta){
+        this.energy += delta;
     }
-
-    public void addObserver(IPositionChangeObserver observer) {
-        this.observers.add(observer);
-    }
-
-    public void removeObserver(IPositionChangeObserver observer){
-        this.observers.remove(observer);
-    }
-
-    private void positionChanged(Vector2d old_position, Vector2d new_position){
-        for (IPositionChangeObserver observer: this.observers) {
-            observer.positionChanged(old_position, new_position);
-        }
-    }
-
 
     @Override
-    public String getResourcePath() {
-        return switch (this.direction) {
-            case NORTH -> "src/main/resources/up.png";
-            case SOUTH ->  "src/main/resources/down.png";
-            case WEST ->  "src/main/resources/left.png";
-            case EAST ->  "src/main/resources/right.png";
-        };
+    public String getImagePath() {
+        String energy_level;
+        int initial_energy = this.map.getConfiguration().initial_energy();
+        if (energy > initial_energy){
+            energy_level = "high/";
+        } else if(energy > initial_energy/2){
+            energy_level = "mid/";
+        } else {
+            energy_level = "low/";
+        }
+        return "src/main/resources/" + energy_level + direction.sourcePath();
+    }
+
+    public Genome getGenome() {
+        return genome;
+    }
+
+    public void gotChild(){
+        this.number_of_children += 1;
+    }
+
+    public int getNumberOfChildren(){
+        return this.number_of_children;
+    }
+
+    public int getAge(){
+        return this.age;
+    }
+
+    @Override
+    public String toString() {
+        return "Animal {" +
+                " Pos: " + this.position.toString() +
+                " Eng: " + this.energy +
+                " Dir: " + this.direction +
+                " Gen: " + this.genome.toString() +
+                "}\n";
     }
 }

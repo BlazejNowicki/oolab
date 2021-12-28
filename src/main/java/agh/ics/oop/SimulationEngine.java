@@ -1,40 +1,29 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class SimulationEngine implements IEngine, Runnable{
-    private MoveDirection[] moves;
-    private final ArrayList<Animal> animals;
-    private final IWorldMap map;
+public class SimulationEngine implements Runnable{
+    private final IMap map;
+    private volatile boolean running = true;
+    private volatile boolean paused = true;
+    private final Object pauseLock = new Object();
     private final LinkedList<IMapChangeObserver> observers;
     private final int delay;
+    private final String output_path;
 
-    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] positions, int delay) {
-         this.moves = moves;
-         this.animals = new ArrayList<>();
-         this.observers = new LinkedList<>();
-         this.map = map;
-         this.delay = delay;
-         for(Vector2d position: positions) {
-             Animal new_animal = new Animal(map, position);
-             map.place(new_animal);
-             this.animals.add(new_animal);
-         }
+    public SimulationEngine(IMap map, int delay, String output_path){
+        this.map = map;
+        this.observers = new LinkedList<>();
+        this.delay = delay;
+        this.output_path = output_path;
     }
 
-    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] positions) {
-        this(moves, map, positions, 0);
+    public IMap getMap() {
+        return map;
     }
 
-    public void setMoves(String moves_string) {
-        System.out.println(moves_string);
-        String[] split = moves_string.split(" ");
-        this.moves = OptionsParser.parse(split);
-    }
-
-    public void addObserver(IMapChangeObserver new_observer){
-        this.observers.add(new_observer);
+    public void addObserver(IMapChangeObserver observer){
+        this.observers.push(observer);
     }
 
     public void mapChanged(){
@@ -43,21 +32,69 @@ public class SimulationEngine implements IEngine, Runnable{
         }
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
     @Override
     public void run() {
-        if (animals.size() == 0) {
-            return;
-        }
-        int animal_index = 0;
-        for(MoveDirection move: this.moves) {
+        while (running) {
+            synchronized (pauseLock) {
+                if (!running) {
+                    break;
+                }
+                if (paused) {
+                    try {
+                        synchronized (pauseLock) {
+                            pauseLock.wait();
+                        }
+                    } catch (InterruptedException ex) {
+                        break;
+                    }
+                    if (!running) {
+                        break;
+                    }
+                }
+            }
+            System.out.println("Start of generation");
+            this.simulateGeneration();
+            System.out.println("End of generation\n");
+            this.mapChanged();
             try{
                 Thread.sleep(this.delay);
             }catch(InterruptedException e){
                 System.out.println(e);
             }
-            this.animals.get(animal_index).move(move);
-            animal_index = (animal_index+1)%animals.size();
-            mapChanged();
         }
+    }
+
+    private void simulateGeneration(){
+        this.map.removeDead();
+        this.map.moveElements();
+        this.map.eatPlants();
+        this.map.reproduction();
+        this.map.spawnPlants();
+        System.out.println(this.map);
+    }
+
+    public void stop() {
+        this.running = false;
+        this.paused = true;
+        toggle();
+    }
+
+    public void toggle() {
+        if(!this.paused){
+            this.paused = true;
+        } else {
+            synchronized (this.pauseLock) {
+                this.paused = false;
+                this.pauseLock.notifyAll();
+            }
+        }
+    }
+
+    public String getOutputPath(){
+        return this.output_path;
     }
 }
