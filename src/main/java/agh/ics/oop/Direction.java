@@ -3,35 +3,35 @@ package agh.ics.oop;
 
 import java.util.Random;
 
-public class Direction {
+public class Direction {    // enum nie byłby lepszy?
     private int direction;
-    private Random rand = new Random();
+    private static final Random rand = new Random();
 
-    public Direction(int direction){
+    public Direction(int direction) {
         direction = direction % 8;
         if (direction < 0) direction += 8;
         this.direction = direction;
     }
 
-    public Direction(){
+    public Direction() {
         this.direction = rand.nextInt(8);
     }
 
-    public Vector2d turn(Genome genes){
+    public Vector2d turn(Genome genes) { // nie czytelniej przekazać inta?
         int turn = genes.getTurn();
 
         int new_direction = (this.direction + turn) % 8;
-        if (turn == 0 || turn == 4){
+        if (turn == 0 || turn == 4) {
             return this.direction_to_vector(new_direction);
         } else {
             this.direction = new_direction;
-            return new Vector2d(0,0);
+            return new Vector2d(0, 0);
         }
     }
 
-    private Vector2d direction_to_vector(int direction){
+    private Vector2d direction_to_vector(int direction) { // czemu ta metoda ignoruje this.direction, a przyjmuje inta?
         return switch (direction) {
-            case 0 -> new Vector2d(0, 1);
+            case 0 -> new Vector2d(0, 1);   // nowy wektor co wywołanie
             case 1 -> new Vector2d(1, 1);
             case 2 -> new Vector2d(1, 0);
             case 3 -> new Vector2d(1, -1);
@@ -39,7 +39,7 @@ public class Direction {
             case 5 -> new Vector2d(-1, -1);
             case 6 -> new Vector2d(-1, 0);
             case 7 -> new Vector2d(-1, 1);
-            default -> new Vector2d(0, 0);
+            default -> new Vector2d(0, 0);  // w tej sytuacji tylko wyjątek
         };
     }
 
@@ -56,8 +56,8 @@ public class Direction {
         return Integer.toString(this.direction);
     }
 
-    public String sourcePath(){
-        return switch (direction){
+    public String sourcePath() { // lepiej by to przenieść gdzieś do GUI
+        return switch (direction) {
             case 0 -> "0.png";
             case 1 -> "1.png";
             case 2 -> "2.png";
@@ -66,7 +66,7 @@ public class Direction {
             case 5 -> "5.png";
             case 6 -> "6.png";
             case 7 -> "7.png";
-            default -> "";
+            default -> "";  // wyjątek
         };
     }
 }

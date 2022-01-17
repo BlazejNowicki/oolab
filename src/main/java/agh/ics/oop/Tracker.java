@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.HashSet;
 
 public class Tracker{
-    private Animal alfa = null;
+    private Animal alfa = null; // alpha
     private Integer alfa_death_time = null;
     private final HashSet<Animal> children = new HashSet<>();
     private final HashSet<Animal> descendants = new HashSet<>();
